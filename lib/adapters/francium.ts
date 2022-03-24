@@ -1,13 +1,13 @@
 import { Connection, PublicKey } from "@solana/web3.js"
+import Decimal from "decimal.js"
 import FranciumSDK from "francium-sdk"
 import { TOKENS } from "../tokens"
 import { AssetRate, ProtocolRates } from "../types"
+import { defaultConnection } from "../utils/connection"
 
-export async function fetch(connection?: Connection): Promise<ProtocolRates> {
-  connection =
-    connection ??
-    new Connection("https://api.mainnet-beta.solana.com", "processed")
-
+export async function fetch(
+  connection: Connection = defaultConnection()
+): Promise<ProtocolRates> {
   const fr = new FranciumSDK({
     connection
   })
@@ -24,8 +24,7 @@ export async function fetch(connection?: Connection): Promise<ProtocolRates> {
       rates.push({
         asset: token.symbol,
         mint: new PublicKey(token.mint),
-        deposit: apy,
-        borrow: undefined
+        deposit: new Decimal(apy)
       })
     }
   })

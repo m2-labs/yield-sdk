@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js"
+import Decimal from "decimal.js"
 
 export type Protocol =
   | "apricot"
@@ -17,6 +18,6 @@ export type ProtocolRates = {
 export type AssetRate = {
   asset: string
   mint: PublicKey
-  deposit?: number
-  borrow?: number
+  deposit?: Decimal
+  borrow?: Decimal
 }

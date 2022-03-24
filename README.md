@@ -12,7 +12,7 @@ Currently supported protocols:
 * [Solend](https://solend.fi)
 * [Tulip](https://tulip.garden)
 
-All data is fetched directly from the Solana blockchain, using the native protocol SDK when available.
+All data is fetched directly from the Solana blockchain, using the native protocol SDK when available. This project does not use screen-scraping or 3rd party APIs.  To prevent rate-limiting, this project attempts to use the officially supported RPCs for each project.
 
 ❤️ Inspired by [defi-yield-ts](https://github.com/jet-lab/defi-yield-ts)
 
