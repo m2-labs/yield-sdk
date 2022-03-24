@@ -1,16 +1,16 @@
 import {
   ApiAssetPool,
   createAssetPoolLoader,
-  getConnection,
   TokenID
 } from "@apricot-lend/sdk-ts"
 import { Connection, PublicKey } from "@solana/web3.js"
 import { findTokenByMint } from "../tokens"
 import { AssetRate, ProtocolRates } from "../types"
+import { defaultConnection } from "../utils/connection"
 
-export async function fetch(
-  connection: Connection = getConnection()
-): Promise<ProtocolRates> {
+export const fetch = async (
+  connection: Connection = defaultConnection("apricot")
+): Promise<ProtocolRates> => {
   const assetPoolLoader = await createAssetPoolLoader(connection)
 
   const rates: AssetRate[] = []

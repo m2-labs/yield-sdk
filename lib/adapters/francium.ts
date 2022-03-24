@@ -5,12 +5,10 @@ import { TOKENS } from "../tokens"
 import { AssetRate, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 
-export async function fetch(
-  connection: Connection = defaultConnection()
-): Promise<ProtocolRates> {
-  const fr = new FranciumSDK({
-    connection
-  })
+export const fetch = async (
+  connection: Connection = defaultConnection("francium")
+): Promise<ProtocolRates> => {
+  const fr = new FranciumSDK({ connection })
 
   const res = await fr.getLendingPoolInfo()
   const rates: AssetRate[] = []
