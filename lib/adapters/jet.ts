@@ -17,11 +17,11 @@ type AnchorWallet = {
 }
 
 class Wallet implements AnchorWallet {
-  async signTransaction(tx: Transaction): Promise<Transaction> {
+  async signTransaction(): Promise<Transaction> {
     throw new Error("Not implemented.")
   }
 
-  async signAllTransactions(txs: Transaction[]): Promise<Transaction[]> {
+  async signAllTransactions(): Promise<Transaction[]> {
     throw new Error("Not implemented.")
   }
 

@@ -6,11 +6,14 @@ export const defaultConnection = (protocol?: string): Connection => {
   switch (protocol) {
     case "apricot":
       return getConnection()
-    // case "francium":
+    case "francium":
+      return new Connection("https://francium.rpcpool.com", "confirmed")
     case "jet":
       return new Connection("https://jetprotocol.genesysgo.net", "confirmed")
     case "mango":
       return new Connection(IDS.cluster_urls.mainnet, "confirmed")
+    case "port":
+      return new Connection("https://solana-api.projectserum.com", "confirmed")
     default:
       return new Connection("https://api.mainnet-beta.solana.com", "confirmed")
   }
