@@ -1,42 +1,53 @@
-<img src="./solana.png" align="right" />
+<img src="./logo.png" align="right" />
 
-# defi-yield
+# yield-sdk
 
-> All Solana DeFi yields in one package.
+> Achieve the best DeFi yields, in one package.
 
-Currently supported protocols:
-
-* [Apricot](https://apricot.one)
-* [Francium](https://francium.io)
-* [Jet Protocol](https://jetprotocol.io)
-* [Mango Markets](https://mango.markets)
-* [Port Finance](https://port.finance)
-* [Solend](https://solend.fi)
-
-All data is fetched directly from the Solana blockchain, using the native protocol SDK when available. This project does not use screen-scraping or 3rd party APIs.  To prevent rate-limiting, this project attempts to use the officially supported RPCs for each project.
-
-❤️ Inspired by [defi-yield-ts](https://github.com/jet-lab/defi-yield-ts)
+This package aims to let you easily load all the DeFi lending and borrowing rates, as well as deposit / withdraw tokens to achieve those yields.  All in one SDK.
 
 ## Installation
 
 ```sh
-npm i defi-yield
+npm i yield-sdk
 ```
+
+## Roadmap
+
+- [x] Support fetching DeFi rates on Solana.
+- [ ] Support for depositing and withdrawing tokens on Solana.
+- [ ] Support for fetching DeFi rates on Ethereum, Avalanche, etc.
+- [ ] Support for depositing and withdrawing tokens on other chains.
+
+## Supported Protocols
+
+- [Apricot](https://apricot.one)
+- [Francium](https://francium.io)
+- [Jet Protocol](https://jetprotocol.io)
+- [Mango Markets](https://mango.markets)
+- [Port Finance](https://port.finance)
+- [Solend](https://solend.fi)
+
+This library currently focuses on Solana, with other chains to come.
+
+All data is fetched directly from the Solana blockchain, using the native protocol SDK when available. This project does not use screen-scraping or 3rd party APIs.  To prevent rate-limiting, this project attempts to use the officially supported RPCs for each project.
+
+❤️ Inspired by [defi-yield-ts](https://github.com/jet-lab/defi-yield-ts)
 
 ## Usage
 
 ### Fetching all rates
 
 ```ts
-import { fetchAll } from "defi-yield"
+import { fetchAll } from "yield-sdk"
 
 const rates = await fetchAll()
 ```
 
-### Fetching speficific rates
+### Fetching specific rates
 
 ```ts
-import { fetch } from "defi-yield"
+import { fetch } from "yield-sdk"
 
 const apricot = await fetch("apricot")
 const francium = await fetch("francium")

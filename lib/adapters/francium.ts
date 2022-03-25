@@ -22,7 +22,7 @@ export const fetch = async (
       rates.push({
         asset: token.symbol,
         mint: new PublicKey(token.mint),
-        deposit: new Decimal(apy)
+        deposit: new Decimal(apy).div(100)
       })
     }
   })
