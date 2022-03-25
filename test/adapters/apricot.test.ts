@@ -1,7 +1,7 @@
 import { isSupportedToken } from "../../lib"
 import { fetch } from "../../lib/adapters/apricot"
 
-test("francium fetches the francium rates", async () => {
+test("fetches the apricot rates", async () => {
   const rates = await fetch()
 
   expect(rates.protocol).toBe("apricot")
