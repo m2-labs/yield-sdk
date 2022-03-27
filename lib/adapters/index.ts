@@ -1,4 +1,5 @@
 import type { Protocol, ProtocolRates } from "../types"
+import { fetch as zeroOne } from "./01"
 import { fetch as apricot } from "./apricot"
 import { fetch as francium } from "./francium"
 import { fetch as jet } from "./jet"
@@ -20,13 +21,23 @@ export const fetch = async (protocol: Protocol): Promise<ProtocolRates> => {
       return port()
     case "solend":
       return solend()
+    case "01":
+      return zeroOne()
     default:
       throw new Error(`Unsupported protocol: ${protocol}`)
   }
 }
 
 export const fetchAll = async (): Promise<ProtocolRates[]> => {
-  return Promise.all([apricot(), francium(), jet(), mango(), port(), solend()])
+  return Promise.all([
+    apricot(),
+    francium(),
+    jet(),
+    mango(),
+    port(),
+    solend(),
+    zeroOne()
+  ])
 }
 
-export { apricot, francium, jet, mango, port, solend }
+export { apricot, francium, jet, mango, port, solend, zeroOne }

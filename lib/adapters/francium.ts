@@ -1,7 +1,7 @@
 import { Connection, PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
 import FranciumSDK from "francium-sdk"
-import { TOKENS } from "../tokens"
+import { findTokenBySymbol } from "../tokens"
 import { AssetRate, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 
@@ -10,13 +10,11 @@ export const fetch = async (
 ): Promise<ProtocolRates> => {
   const fr = new FranciumSDK({ connection })
 
-  const res = await fr.getLendingPoolInfo()
+  const assets = await fr.getLendingPoolInfo()
   const rates: AssetRate[] = []
 
-  res.forEach(({ pool, apy }) => {
-    const token = TOKENS.find((token) => {
-      return token.symbol === pool
-    })
+  assets.forEach(({ pool, apy }) => {
+    const token = findTokenBySymbol(pool)
 
     if (token) {
       rates.push({
@@ -30,5 +28,5 @@ export const fetch = async (
   return {
     protocol: "francium",
     rates
-  } as ProtocolRates
+  }
 }

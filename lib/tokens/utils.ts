@@ -17,3 +17,9 @@ export const findTokenByMint = (mint: PublicKeyLike) => {
     return asPublicKey(token.mint).equals(asPublicKey(mint))
   })
 }
+
+export const findTokenBySymbol = (symbol: string) => {
+  return TOKENS.find((token) => {
+    return token.symbol === symbol
+  })
+}

@@ -50,7 +50,7 @@ export const fetch = async (
       mint: new PublicKey(e.mintKey),
       deposit: new Decimal(depositRate.toNumber()),
       borrow: new Decimal(borrowRate.toNumber())
-    } as AssetRate
+    }
   })
 
   return {
