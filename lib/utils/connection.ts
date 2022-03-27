@@ -4,6 +4,8 @@ import { Connection } from "@solana/web3.js"
 
 export const defaultConnection = (protocol?: string): Connection => {
   switch (protocol) {
+    case "01":
+      return new Connection("https://api.mainnet-beta.solana.com", "confirmed")
     case "apricot":
       return getConnection()
     case "francium":

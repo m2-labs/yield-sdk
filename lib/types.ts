@@ -2,6 +2,7 @@ import { PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
 
 export type Protocol =
+  | "01"
   | "apricot"
   | "francium"
   | "jet"
