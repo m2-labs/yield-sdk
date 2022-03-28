@@ -142,8 +142,8 @@ export async function fetch(
 
     const dailyBorrowRate = borrowAPR.div(365)
     const dailyLendingRate = utilization.times(dailyBorrowRate)
-    const borrowAPY = compound(dailyBorrowRate, DURATION.YEARLY)
-    const lendAPY = compound(dailyLendingRate, DURATION.YEARLY)
+    const borrowAPY = compound(dailyBorrowRate, DURATION.YEARLY).div(100)
+    const lendAPY = compound(dailyLendingRate, DURATION.YEARLY).div(100)
 
     rates.push({
       asset: token.symbol,
