@@ -11,7 +11,6 @@ export const isSupportedToken = (symbol: string, mint: PublicKeyLike) => {
     })
   )
 }
-
 export const findTokenByMint = (mint: PublicKeyLike) => {
   return TOKENS.find((token) => {
     return asPublicKey(token.mint).equals(asPublicKey(mint))
