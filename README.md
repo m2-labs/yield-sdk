@@ -28,6 +28,7 @@ npm i yield-sdk
 - [Mango Markets](https://mango.markets)
 - [Port Finance](https://port.finance)
 - [Solend](https://solend.fi)
+- [Tulip](https://tulip.garden)
 
 This library currently focuses on Solana, with other chains to come.
 
@@ -56,6 +57,8 @@ const jet = await fetch("jet")
 const mango = await fetch("mango")
 const port = await fetch("port")
 const solend = await fetch("solend")
+const tulip = await fetch("tulip")
+const zeroOne = await fetch("01")
 ```
 
 ### Sample Result
@@ -64,12 +67,6 @@ const solend = await fetch("solend")
 {
  "protocol": "apricot",
  "rates": [
-  {
-   "asset": "APT",
-   "mint": "APTtJyaRX5yGTsJU522N4VYWg3vCvSb65eam5GrPT5Rt",
-   "deposit": "0.00007526233907010839",
-   "borrow": "0.02095090790169926"
-  },
   {
    "asset": "BTC",
    "mint": "9n4nbM75f5Ui33ZbPYXn59EwSgE8CGsHtAeTH5YFeJ9E",
@@ -83,40 +80,16 @@ const solend = await fetch("solend")
    "borrow": "0.034203185244413"
   },
   {
-   "asset": "FTT",
-   "mint": "AGFEad2et2ZJif9jaGpdMixQqvW5i81aBdvKe7PHNfz3",
-   "deposit": "0",
-   "borrow": "0.02"
-  },
-  {
    "asset": "mSOL",
    "mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
    "deposit": "0.0019126422121402238",
    "borrow": "0.03462290893436556"
   },
   {
-   "asset": "ORCA",
-   "mint": "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE",
-   "deposit": "0.14365953720529293",
-   "borrow": "0.21103569917529869"
-  },
-  {
-   "asset": "RAY",
-   "mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
-   "deposit": "0.12447219187836081",
-   "borrow": "0.19179252289235138"
-  },
-  {
    "asset": "SOL",
    "mint": "So11111111111111111111111111111111111111112",
    "deposit": "0.03149277251349529",
    "borrow": "0.10184945365066264"
-  },
-  {
-   "asset": "SRM",
-   "mint": "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt",
-   "deposit": "0.0014391693941224902",
-   "borrow": "0.031930722840949444"
   },
   {
    "asset": "USDC",
