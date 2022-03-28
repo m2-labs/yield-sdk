@@ -1,4 +1,5 @@
-import { fetchAll, isSupportedToken } from "../../lib"
+import { fetchAll } from "../../lib"
+import { isSupportedToken } from "../support/tokens"
 
 test(".fetchAll() fetches the all rates", async () => {
   const rates = await fetchAll()

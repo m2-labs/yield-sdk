@@ -1,19 +1,16 @@
-import { isSupportedToken } from "../../lib/tokens/utils"
+import { findTokenByMint } from "../../lib/tokens/utils"
 
-test("isSupportedToken() returns true if the token is supported", () => {
+test("findTokenByMint() returns the token if the token is supported", () => {
   expect(
-    isSupportedToken("SOL", "So11111111111111111111111111111111111111112")
-  ).toBe(true)
+    findTokenByMint("So11111111111111111111111111111111111111112")
+  ).toBeDefined()
   expect(
-    isSupportedToken("USDC", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
-  ).toBe(true)
+    findTokenByMint("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
+  ).toBeDefined()
 })
 
-test("isSupportedToken() returns false if the token is not supported", () => {
+test("findTokenByMint() returns undefined if the token is not supported", () => {
   expect(
-    isSupportedToken("USDC", "So11111111111111111111111111111111111111112")
-  ).toBe(false)
-  expect(
-    isSupportedToken("SOL", "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")
-  ).toBe(false)
+    findTokenByMint("EP11111111111111111111111111111111111111112")
+  ).toBeUndefined()
 })

@@ -1,5 +1,5 @@
-import { isSupportedToken } from "../../lib"
 import { fetch } from "../../lib/adapters/mango"
+import { isSupportedToken } from "../support/tokens"
 
 test("fetches the mango rates", async () => {
   const rates = await fetch()

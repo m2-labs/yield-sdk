@@ -1,5 +1,5 @@
-import { isSupportedToken } from "../../lib"
 import { fetch } from "../../lib/adapters/solend"
+import { isSupportedToken } from "../support/tokens"
 
 test("fetches the solend rates", async () => {
   const rates = await fetch()

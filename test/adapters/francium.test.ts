@@ -1,5 +1,5 @@
-import { isSupportedToken } from "../../lib"
 import { fetch } from "../../lib/adapters/francium"
+import { isSupportedToken } from "../support/tokens"
 
 test("fetches the francium rates", async () => {
   const rates = await fetch()

@@ -1,5 +1,5 @@
-import { isSupportedToken } from "../../lib"
 import { fetch } from "../../lib/adapters/apricot"
+import { isSupportedToken } from "../support/tokens"
 
 test("fetches the apricot rates", async () => {
   const rates = await fetch()

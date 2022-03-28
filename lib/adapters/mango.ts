@@ -6,15 +6,6 @@ import { AssetRate, ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
 import { defaultConnection } from "../utils/connection"
 
-const toAsset = (asset: string): string => {
-  switch (asset) {
-    case "MSOL":
-      return "mSOL"
-    default:
-      return asset
-  }
-}
-
 export const fetch = async (
   connection = defaultConnection("mango")
 ): Promise<ProtocolRates> => {
