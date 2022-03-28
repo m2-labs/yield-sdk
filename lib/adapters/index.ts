@@ -6,6 +6,7 @@ import { fetch as jet } from "./jet"
 import { fetch as mango } from "./mango"
 import { fetch as port } from "./port"
 import { fetch as solend } from "./solend"
+import { fetch as tulip } from "./tulip"
 
 export const fetch = async (protocol: Protocol): Promise<ProtocolRates> => {
   switch (protocol) {
@@ -21,6 +22,8 @@ export const fetch = async (protocol: Protocol): Promise<ProtocolRates> => {
       return port()
     case "solend":
       return solend()
+    case "tulip":
+      return tulip()
     case "01":
       return zeroOne()
     default:
@@ -36,8 +39,9 @@ export const fetchAll = async (): Promise<ProtocolRates[]> => {
     mango(),
     port(),
     solend(),
+    tulip(),
     zeroOne()
   ])
 }
 
-export { apricot, francium, jet, mango, port, solend, zeroOne }
+export { apricot, francium, jet, mango, port, solend, tulip, zeroOne }

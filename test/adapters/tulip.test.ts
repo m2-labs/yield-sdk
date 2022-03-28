@@ -1,10 +1,10 @@
-import { fetch } from "../../lib/adapters/mango"
+import { fetch } from "../../lib/adapters/tulip"
 import { isSupportedToken } from "../support/tokens"
 
-test("fetches the mango rates", async () => {
+test("fetches the tulip rates", async () => {
   const rates = await fetch()
 
-  expect(rates.protocol).toBe("mango")
+  expect(rates.protocol).toBe("tulip")
   expect(rates.rates.length).toBeTruthy()
 
   expect(rates.rates.find(({ asset }) => asset === "SOL")).toBeDefined()

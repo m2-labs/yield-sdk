@@ -1,10 +1,20 @@
-import { fetchAll, isSupportedToken } from "../../lib"
+import { fetchAll } from "../../lib"
+import { isSupportedToken } from "../support/tokens"
 
 test(".fetchAll() fetches the all rates", async () => {
   const rates = await fetchAll()
 
   expect(rates.map(({ protocol }) => protocol).sort()).toEqual(
-    ["01", "apricot", "francium", "jet", "mango", "port", "solend"].sort()
+    [
+      "01",
+      "apricot",
+      "francium",
+      "jet",
+      "mango",
+      "port",
+      "solend",
+      "tulip"
+    ].sort()
   )
 
   rates.forEach((protocol) => {
