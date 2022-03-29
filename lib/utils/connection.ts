@@ -10,6 +10,11 @@ export const defaultConnection = (protocol?: string): Connection => {
       return new Connection("https://francium.rpcpool.com", "confirmed")
     case "jet":
       return new Connection("https://jetprotocol.genesysgo.net", "confirmed")
+    case "larix":
+      return new Connection(
+        "https://solana-mainnet.projectlarix.com",
+        "confirmed"
+      )
     case "mango":
       return new Connection(IDS.cluster_urls.mainnet, "confirmed")
     case "port":
