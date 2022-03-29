@@ -211,7 +211,7 @@ export async function fetch(
 
   const rates: AssetRate[] = []
 
-  infos.forEach((info, i) => {
+  infos.forEach((info) => {
     if (!info) {
       return
     }
