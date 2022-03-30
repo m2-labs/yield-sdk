@@ -14,12 +14,13 @@ test(".fetchAll() fetches the all rates", async () => {
       "mango",
       "port",
       "solend",
+      "solend-stable",
+      "solend-turbo",
       "tulip"
     ].sort()
   )
 
   rates.forEach((protocol) => {
-    expect(protocol.rates.find(({ asset }) => asset === "SOL")).toBeDefined()
     expect(protocol.rates.find(({ asset }) => asset === "USDC")).toBeDefined()
 
     protocol.rates.forEach(({ asset, mint }) => {
