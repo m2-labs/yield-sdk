@@ -10,6 +10,7 @@ export type Protocol =
   | "mango"
   | "port"
   | "solend"
+  | "solend-turbo"
   | "tulip"
 
 export type ProtocolRates = {
