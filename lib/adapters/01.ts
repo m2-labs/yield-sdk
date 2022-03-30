@@ -32,8 +32,8 @@ export async function fetch(
     rates.push({
       asset: token.symbol,
       mint: new PublicKey(token.mint),
-      deposit: new Decimal(a.supplyApy),
-      borrow: new Decimal(a.borrowsApy)
+      deposit: new Decimal(a.supplyApy).div(100),
+      borrow: new Decimal(a.borrowsApy).div(100)
     })
   })
 
