@@ -21,6 +21,9 @@ export const defaultConnection = (protocol?: string): Connection => {
     case "tulip":
       return new Connection("https://solana-api.projectserum.com", "confirmed")
     case "01":
+    case "solend":
+    case "solend-stable":
+    case "solend-turbo":
     default:
       return new Connection("https://api.mainnet-beta.solana.com", "confirmed")
   }

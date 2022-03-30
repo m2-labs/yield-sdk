@@ -6,12 +6,12 @@ import { AssetRate, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 
 export async function fetch(
-  connection = defaultConnection("solend-turbo")
+  connection = defaultConnection("solend-stable")
 ): Promise<ProtocolRates> {
   const market = await SolendMarket.initialize(
     connection,
     "production",
-    "7RCz8wb6WXxUhAigok9ttgrVgDFFFbibcirECzWSBauM"
+    "GktVYgkstojYd8nVXGXKJHi7SstvgZ6pkQqQhUPD7y7Q"
   )
   await market.loadReserves()
 
@@ -33,7 +33,7 @@ export async function fetch(
   })
 
   return {
-    protocol: "solend-turbo",
+    protocol: "solend-stable",
     rates
   }
 }

@@ -29,6 +29,8 @@ npm i yield-sdk
 - [Mango Markets](https://mango.markets)
 - [Port Finance](https://port.finance)
 - [Solend](https://solend.fi)
+- [Solend Turbo Pool](https://solend.fi)
+- [Solend Stable Pool](https://solend.fi)
 - [Tulip](https://tulip.garden)
 
 This library currently focuses on Solana, with other chains to come.
