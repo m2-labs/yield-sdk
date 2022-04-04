@@ -1,13 +1,18 @@
-import { TOKENS } from "../../lib/tokens"
-import { asPublicKey, PublicKeyLike } from "../../lib/utils/public-key"
+import { AssetRate } from "../../lib/types"
+import { asyncMap } from "../../lib/utils/array-fns"
+import { PublicKeyLike } from "../../lib/utils/public-key"
+import { findTokenByMint } from "../../lib/utils/tokens"
 
-export const isSupportedToken = (symbol: string, mint: PublicKeyLike) => {
-  return Boolean(
-    TOKENS.find((token) => {
-      return (
-        token.symbol === symbol &&
-        asPublicKey(token.mint).equals(asPublicKey(mint))
-      )
-    })
-  )
+export const isSupportedToken = async (symbol: string, mint: PublicKeyLike) => {
+  const token = await findTokenByMint(mint)
+
+  return Boolean(token && token.symbol === symbol)
+}
+
+export const expectSupported = async (rates: AssetRate[]) => {
+  await asyncMap(rates, async ({ asset, mint }) => {
+    const isSupported = await isSupportedToken(asset, mint)
+
+    expect(isSupported).toBe(true)
+  })
 }

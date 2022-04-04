@@ -1,9 +1,10 @@
 import { Connection, PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
 import FranciumSDK from "francium-sdk"
-import { findTokenBySymbol } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
+import { findTokenBySymbol } from "../utils/tokens"
 
 export const fetch = async (
   connection: Connection = defaultConnection("francium")
@@ -11,22 +12,23 @@ export const fetch = async (
   const fr = new FranciumSDK({ connection })
 
   const assets = await fr.getLendingPoolInfo()
-  const rates: AssetRate[] = []
 
-  assets.forEach(({ pool, apy }) => {
-    const token = findTokenBySymbol(pool)
+  const rates = await asyncMap(assets, async ({ pool, apy }) => {
+    const token = await findTokenBySymbol(pool)
 
-    if (token) {
-      rates.push({
-        asset: token.symbol,
-        mint: new PublicKey(token.mint),
-        deposit: new Decimal(apy).div(100)
-      })
+    if (!token) {
+      return
+    }
+
+    return {
+      asset: token.symbol,
+      mint: new PublicKey(token.address),
+      deposit: new Decimal(apy).div(100)
     }
   })
 
   return {
     protocol: "francium",
-    rates
+    rates: compact(rates)
   }
 }

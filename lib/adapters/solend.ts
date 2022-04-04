@@ -1,9 +1,10 @@
 import { PublicKey } from "@solana/web3.js"
 import { SolendMarket } from "@solendprotocol/solend-sdk"
 import Decimal from "decimal.js"
-import { findTokenByMint } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
+import { findTokenByMint } from "../utils/tokens"
 
 export async function fetch(
   connection = defaultConnection("solend")
@@ -11,25 +12,23 @@ export async function fetch(
   const market = await SolendMarket.initialize(connection)
   await market.loadReserves()
 
-  const rates: AssetRate[] = []
-
-  market.reserves.forEach((reserve) => {
-    const token = findTokenByMint(reserve.config.mintAddress)
+  const rates = await asyncMap(market.reserves, async (reserve) => {
+    const token = await findTokenByMint(reserve.config.mintAddress)
 
     if (!token || !reserve.stats) {
       return
     }
 
-    rates.push({
+    return {
       asset: token.symbol,
-      mint: new PublicKey(token.mint),
+      mint: new PublicKey(token.address),
       deposit: new Decimal(reserve.stats.supplyInterestAPY),
       borrow: new Decimal(reserve.stats.borrowInterestAPY)
-    })
+    }
   })
 
   return {
     protocol: "solend",
-    rates
+    rates: compact(rates)
   }
 }

@@ -1,10 +1,11 @@
 import { Config, IDS, MangoClient } from "@blockworks-foundation/mango-client"
 import { PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
-import { findTokenByMint } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
+import { findTokenByMint } from "../utils/tokens"
 
 export const fetch = async (
   connection = defaultConnection("mango")
@@ -32,10 +33,8 @@ export const fetch = async (
   )
   const mangoGroup = await client.getMangoGroup(groupConfig.publicKey)
   await mangoGroup.loadRootBanks(connection)
-  const rates: AssetRate[] = []
-
-  groupConfig.tokens.forEach((t) => {
-    const token = findTokenByMint(t.mintKey)
+  const rates = await asyncMap(groupConfig.tokens, async (t) => {
+    const token = await findTokenByMint(t.mintKey)
 
     if (!token) {
       return
@@ -45,16 +44,16 @@ export const fetch = async (
     const borrowRate = mangoGroup.getBorrowRate(tokenIndex)
     const depositRate = mangoGroup.getDepositRate(tokenIndex)
 
-    rates.push({
+    return {
       asset: token.symbol,
-      mint: new PublicKey(token.mint),
+      mint: new PublicKey(token.address),
       deposit: new Decimal(depositRate.toNumber()),
       borrow: new Decimal(borrowRate.toNumber())
-    })
+    }
   })
 
   return {
     protocol: "mango",
-    rates
+    rates: compact(rates)
   }
 }

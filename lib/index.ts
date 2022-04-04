@@ -1,3 +1,3 @@
 export * from "./adapters"
-export * from "./tokens"
+export * from "./utils/tokens"
 export * from "./types"

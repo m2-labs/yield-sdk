@@ -1,5 +1,5 @@
 import { fetchAll } from "../../lib"
-import { isSupportedToken } from "../support/tokens"
+import { expectSupported } from "../support/tokens"
 
 test(".fetchAll() fetches the all rates", async () => {
   const rates = await fetchAll()
@@ -20,11 +20,10 @@ test(".fetchAll() fetches the all rates", async () => {
     ].sort()
   )
 
-  rates.forEach((protocol) => {
-    expect(protocol.rates.find(({ asset }) => asset === "USDC")).toBeDefined()
+  for (let i = 0; i < rates.length; i++) {
+    const rate = rates[i]
 
-    protocol.rates.forEach(({ asset, mint }) => {
-      expect(isSupportedToken(asset, mint)).toBe(true)
-    })
-  })
+    expect(rate.rates.find(({ asset }) => asset === "USDC")).toBeDefined()
+    await expectSupported(rate.rates)
+  }
 })
