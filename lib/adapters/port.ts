@@ -1,8 +1,9 @@
 import { Port, ReserveInfo } from "@port.finance/port-sdk"
 import { PublicKey } from "@solana/web3.js"
-import { findTokenByMint } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
+import { findTokenByMint } from "../utils/tokens"
 
 export async function fetch(
   connection = defaultConnection("port")
@@ -11,25 +12,23 @@ export async function fetch(
   const context = await port.getReserveContext()
   const reserves: ReserveInfo[] = context.getAllReserves()
 
-  const rates: AssetRate[] = reserves
-    .map((reserve) => {
-      const token = findTokenByMint(reserve.getAssetMintId())
+  const rates = await asyncMap(reserves, async (reserve) => {
+    const token = await findTokenByMint(reserve.getAssetMintId())
 
-      if (!token) {
-        return
-      }
+    if (!token) {
+      return
+    }
 
-      return {
-        asset: token.symbol,
-        mint: new PublicKey(token.mint),
-        deposit: reserve.getSupplyApy().getUnchecked().toNumber(),
-        borrow: reserve.getBorrowApy().getUnchecked().toNumber()
-      }
-    })
-    .filter(Boolean) as AssetRate[]
+    return {
+      asset: token.symbol,
+      mint: new PublicKey(token.address),
+      deposit: reserve.getSupplyApy().getUnchecked().toNumber(),
+      borrow: reserve.getBorrowApy().getUnchecked().toNumber()
+    }
+  })
 
   return {
     protocol: "port",
-    rates
+    rates: compact(rates)
   }
 }

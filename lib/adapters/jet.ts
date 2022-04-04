@@ -6,10 +6,11 @@ import {
 } from "@jet-lab/jet-engine"
 import { PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
-import { findTokenByMint } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
+import { findTokenByMint } from "../utils/tokens"
 
 export const fetch = async (
   connection = defaultConnection("jet")
@@ -19,25 +20,23 @@ export const fetch = async (
   const market = await JetMarket.load(client, JET_MARKET_ADDRESS)
   const reserves = await JetReserve.loadMultiple(client, market)
 
-  const rates: AssetRate[] = []
-
-  reserves.forEach((reserve) => {
-    const token = findTokenByMint(reserve.data.tokenMint)
+  const rates = await asyncMap(reserves, async (reserve) => {
+    const token = await findTokenByMint(reserve.data.tokenMint)
 
     if (!token) {
       return
     }
 
-    rates.push({
+    return {
       asset: token.symbol,
-      mint: new PublicKey(token.mint),
+      mint: new PublicKey(token.address),
       deposit: new Decimal(reserve.data.depositApy),
       borrow: new Decimal(reserve.data.borrowApr)
-    })
+    }
   })
 
   return {
     protocol: "jet",
-    rates
+    rates: compact(rates)
   }
 }

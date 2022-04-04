@@ -2,9 +2,11 @@ import { publicKey, u8, u64, u128, struct, bool } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import TULIP_TOKENS from "@tulip-protocol/platform-sdk/constants/lending_info.json"
 import Decimal from "decimal.js"
-import { findTokenByMint } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
+import { asPublicKey } from "../utils"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
+import { findTokenByMint } from "../utils/tokens"
 
 const LENDING_RESERVES = TULIP_TOKENS.lending.reserves
 const DURATION = { DAILY: 144, WEEKLY: 1008, YEARLY: 52560 }
@@ -73,21 +75,32 @@ const compound = (amount: Decimal, timeframe: number) => {
 export async function fetch(
   connection = defaultConnection("tulip")
 ): Promise<ProtocolRates> {
-  const reserves = LENDING_RESERVES.filter((reserve) =>
-    Boolean(findTokenByMint(reserve.liquidity_supply_token_mint))
-  )
+  const reserves = await asyncMap(LENDING_RESERVES, async (reserve) => {
+    const token = await findTokenByMint(reserve.liquidity_supply_token_mint)
 
-  const infos = await connection.getMultipleAccountsInfo(
-    reserves.map((reserve) => new PublicKey(reserve.account))
-  )
+    if (!token) {
+      return
+    }
 
-  const rates: AssetRate[] = []
+    return new PublicKey(reserve.account)
+  })
 
-  infos.forEach((info, i) => {
-    const reserve = reserves[i]
-    const token = findTokenByMint(reserve.liquidity_supply_token_mint)
+  const infos = await connection.getMultipleAccountsInfo(compact(reserves))
 
-    if (!info || !token) {
+  const rates = await asyncMap(infos, async (info, i) => {
+    const reservePubKey = reserves[i]
+
+    if (!info || !reservePubKey) {
+      return
+    }
+
+    const reserve = LENDING_RESERVES.find((r) =>
+      asPublicKey(r.account).equals(reservePubKey)
+    )
+
+    const token = await findTokenByMint(reserve?.liquidity_supply_token_mint)
+
+    if (!token || !reserve) {
       return
     }
 
@@ -145,16 +158,16 @@ export async function fetch(
     const borrowAPY = compound(dailyBorrowRate, DURATION.YEARLY).div(100)
     const lendAPY = compound(dailyLendingRate, DURATION.YEARLY).div(100)
 
-    rates.push({
+    return {
       asset: token.symbol,
-      mint: new PublicKey(token.mint),
+      mint: new PublicKey(token.address),
       deposit: lendAPY,
       borrow: borrowAPY
-    })
+    }
   })
 
   return {
     protocol: "tulip",
-    rates
+    rates: compact(rates)
   }
 }

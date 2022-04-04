@@ -3,9 +3,10 @@ import { publicKey, u8, u64, u128, struct } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import * as BufferLayout from "buffer-layout"
 import Decimal from "decimal.js"
-import { findTokenByMint } from "../tokens"
-import { AssetRate, ProtocolRates } from "../types"
+import { ProtocolRates } from "../types"
+import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
+import { findTokenByMint } from "../utils/tokens"
 
 const LARIX_RESERVE_IDS = [
   new PublicKey("DC832AzxQMGDaVLGiRQfRCkyXi6PUPjQyQfMbVRRjtKA"), // USDT
@@ -209,31 +210,29 @@ export async function fetch(
 ): Promise<ProtocolRates> {
   const infos = await connection.getMultipleAccountsInfo(LARIX_RESERVE_IDS)
 
-  const rates: AssetRate[] = []
-
-  infos.forEach((info) => {
+  const rates = await asyncMap(infos, async (info) => {
     if (!info) {
       return
     }
 
     const reserve: Reserve = RESERVE_LAYOUT.decode(info.data)
-    const token = findTokenByMint(reserve.liquidity.mintPubkey)
+    const token = await findTokenByMint(reserve.liquidity.mintPubkey)
     const interestData = calculateInterest(reserve)
 
     if (!token || !interestData) {
       return
     }
 
-    rates.push({
+    return {
       asset: token.symbol,
-      mint: new PublicKey(token.mint),
+      mint: new PublicKey(token.address),
       deposit: interestData.deposit,
       borrow: interestData.borrow
-    })
+    }
   })
 
   return {
     protocol: "larix",
-    rates
+    rates: compact(rates)
   }
 }
