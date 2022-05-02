@@ -7,7 +7,6 @@ const RPCs = [
   "https://solana-api.projectserum.com",
   "https://rpc.ankr.com/solana",
   "https://solana.public-rpc.com",
-  "https://solana-mainnet.phantom.tech",
   "https://api.rpcpool.com"
 ]
 

@@ -16,15 +16,10 @@ export const fetch = async (
 
   const assetPools = (
     await Promise.all([
-      assetPoolLoader.getAssetPool(TokenID.APT),
       assetPoolLoader.getAssetPool(TokenID.BTC),
       assetPoolLoader.getAssetPool(TokenID.ETH),
-      assetPoolLoader.getAssetPool(TokenID.FTT),
       assetPoolLoader.getAssetPool(TokenID.mSOL),
-      assetPoolLoader.getAssetPool(TokenID.ORCA),
-      assetPoolLoader.getAssetPool(TokenID.RAY),
       assetPoolLoader.getAssetPool(TokenID.SOL),
-      assetPoolLoader.getAssetPool(TokenID.SRM),
       assetPoolLoader.getAssetPool(TokenID.USDC),
       assetPoolLoader.getAssetPool(TokenID.USDT),
       assetPoolLoader.getAssetPool(TokenID.USTv2)
