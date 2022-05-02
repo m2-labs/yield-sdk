@@ -2,29 +2,25 @@ import { getConnection } from "@apricot-lend/sdk-ts"
 import { IDS } from "@blockworks-foundation/mango-client"
 import { Connection } from "@solana/web3.js"
 
+const RPCs = [
+  "https://api.mainnet-beta.solana.com",
+  "https://solana-api.projectserum.com",
+  "https://rpc.ankr.com/solana",
+  "https://solana.public-rpc.com",
+  "https://solana-mainnet.phantom.tech",
+  "https://api.rpcpool.com"
+]
+
 export const defaultConnection = (protocol?: string): Connection => {
   switch (protocol) {
     case "apricot":
       return getConnection()
-    case "francium":
-      return new Connection("https://francium.rpcpool.com", "confirmed")
-    case "jet":
-      return new Connection("https://jetprotocol.genesysgo.net", "confirmed")
-    case "larix":
-      return new Connection(
-        "https://solana-mainnet.projectlarix.com",
-        "confirmed"
-      )
     case "mango":
       return new Connection(IDS.cluster_urls.mainnet, "confirmed")
-    case "port":
-    case "tulip":
-      return new Connection("https://solana-api.projectserum.com", "confirmed")
-    case "01":
-    case "solend":
-    case "solend-stable":
-    case "solend-turbo":
     default:
-      return new Connection("https://api.mainnet-beta.solana.com", "confirmed")
+      return new Connection(
+        RPCs[Math.floor(Math.random() * RPCs.length)],
+        "confirmed"
+      )
   }
 }
