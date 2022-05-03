@@ -1,6 +1,6 @@
 import { fetchAll } from "../../lib"
 import { expectSupported } from "../support/tokens"
-
+jest.setTimeout(60_000)
 test(".fetchAll() fetches the all rates", async () => {
   const rates = await fetchAll()
 
