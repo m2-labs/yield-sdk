@@ -111,6 +111,18 @@ const zeroOne = await fetch("01")
   }
 ```
 
+## Depositing
+
+```ts
+import { deposit } from "yield-sdk"
+
+const depositAmount = new TokenAmount("100", "USDC")
+const depositTx = await deposit("francium", depositAmount, publicKey, connection)
+
+// Use traditional wallet methods to send the transaction:
+await sendTransaction(connection, depositTx)
+```
+
 ## Brought to you by M2 Labs
 
 <img src="https://m2.xyz/github.png" alt="M2 Labs" width="427" height="94" />

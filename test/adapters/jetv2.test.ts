@@ -13,7 +13,7 @@ test("fetches the jet rates", async () => {
   await expectSupported(rates.rates)
 })
 
-test("allows filtering tokens", async () => {
+test("fetch() allows filtering tokens", async () => {
   const rates = await fetch({ tokens: ["USDC"] })
 
   expect(rates.protocol).toBe("jetv2")

@@ -15,9 +15,9 @@ const RPCs = [
 ]
 
 /**
- *
+ * Build a `Connection` object for the given protocol
  */
-const defaultConnection = (protocol?: Protocol): Connection => {
+export const defaultConnection = (protocol?: Protocol): Connection => {
   const rpc =
     protocol === "mango"
       ? IDS.cluster_urls.mainnet

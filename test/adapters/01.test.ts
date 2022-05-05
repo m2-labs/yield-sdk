@@ -13,7 +13,7 @@ test("fetches the 01 rates", async () => {
   await expectSupported(rates.rates)
 })
 
-test("allows filtering tokens", async () => {
+test("fetch() allows filtering tokens", async () => {
   const rates = await fetch({ tokens: ["USDC"] })
 
   expect(rates.protocol).toBe("01")

@@ -1,15 +1,18 @@
-import { AssetRate, FetchOptions, Protocol } from "../types"
-import { defaultOptions, DefaultOptions } from "./connection"
+import { Fetch, FetchOptions, Protocol } from "../types"
+import { defaultOptions } from "./connection"
 import { buildProtocolRates } from "./rate-fns"
 
-export const fetchHandler = (
+/**
+ * Wrapper method to build a fetch method with consistent inputs and outputs.
+ */
+export const fetchHandler = <T = void>(
   protocol: Protocol,
-  handler: (opts: DefaultOptions) => Promise<(AssetRate | undefined | null)[]>
+  handler: Fetch<T>
 ) => {
-  return async (opts?: FetchOptions) => {
+  return async (opts?: FetchOptions, adapterOpts?: T) => {
     const defaults = defaultOptions(protocol, opts)
 
-    const rates = await handler(defaults)
+    const rates = await handler(defaults, adapterOpts)
 
     return buildProtocolRates(protocol, rates)
   }

@@ -1,35 +1,77 @@
-import { findTokenByMint } from "@m2-labs/token-amount"
-import { SolendMarket } from "@solendprotocol/solend-sdk"
-import Decimal from "decimal.js"
 import { fetchHandler } from "../utils/fetch-fns"
-import { buildAssetRate } from "../utils/rate-fns"
+import {
+  Deposit,
+  GetDepositedBalance,
+  GetMaximumDeposit,
+  Withdraw
+} from "../types"
+import { defaultConnection } from "../utils/connection"
+import {
+  solendFetch,
+  getMaximumDeposit as solendGetMaximumDeposit,
+  getDepositedBalance as solendGetDepositedBalance,
+  deposit as solendDeposit,
+  withdraw as solendWithdraw
+} from "./solend"
 
-export const fetch = fetchHandler(
-  "solend-stable",
-  async ({ connection, isDesiredToken }) => {
-    const market = await SolendMarket.initialize(
-      connection,
-      "production",
-      "GktVYgkstojYd8nVXGXKJHi7SstvgZ6pkQqQhUPD7y7Q"
-    )
-    await market.loadReserves()
+const MARKET_ADDRESS = "GktVYgkstojYd8nVXGXKJHi7SstvgZ6pkQqQhUPD7y7Q"
 
-    const rates = market.reserves.map((reserve) => {
-      const token = findTokenByMint(reserve.config.mintAddress)
+/**
+ * Fetch the latest rates
+ */
+export const fetch = fetchHandler("solend-stable", async (opts) => {
+  const rates = await solendFetch(opts, { marketAddress: MARKET_ADDRESS })
 
-      if (!token || !reserve.stats) {
-        return
-      }
+  return rates
+})
 
-      if (isDesiredToken(token)) {
-        return buildAssetRate({
-          token,
-          deposit: new Decimal(reserve.stats.supplyInterestAPY),
-          borrow: new Decimal(reserve.stats.borrowInterestAPY)
-        })
-      }
-    })
+/**
+ *
+ */
+export const getMaximumDeposit: GetMaximumDeposit = async (
+  tokenInfo,
+  connection = defaultConnection("solend-stable")
+) => {
+  return solendGetMaximumDeposit(tokenInfo, connection, {
+    marketAddress: MARKET_ADDRESS
+  })
+}
 
-    return rates
-  }
-)
+/**
+ *
+ */
+export const getDepositedBalance: GetDepositedBalance = async (
+  tokenInfo,
+  publicKey,
+  connection = defaultConnection("solend-stable")
+) => {
+  return solendGetDepositedBalance(tokenInfo, publicKey, connection, {
+    marketAddress: MARKET_ADDRESS
+  })
+}
+
+/**
+ *
+ */
+export const deposit: Deposit = async (
+  amount,
+  publicKey,
+  connection = defaultConnection("solend-stable")
+) => {
+  return solendDeposit(amount, publicKey, connection, {
+    marketAddress: MARKET_ADDRESS
+  })
+}
+
+/**
+ *
+ */
+export const withdraw: Withdraw = async (
+  amount,
+  publicKey,
+  connection = defaultConnection("solend-stable")
+) => {
+  return solendWithdraw(amount, publicKey, connection, {
+    marketAddress: MARKET_ADDRESS
+  })
+}
