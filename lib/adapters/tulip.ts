@@ -3,7 +3,7 @@ import { publicKey, u8, u64, u128, struct, bool } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import TULIP_TOKENS from "@tulip-protocol/platform-sdk/constants/lending_info.json"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { Fetch } from "../types"
 import { asPublicKey } from "../utils"
 import { compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
@@ -73,9 +73,7 @@ const compound = (amount: Decimal, timeframe: number) => {
   return a.div(100).plus(1).pow(timeframe).minus(1).times(100)
 }
 
-export async function fetch(
-  connection = defaultConnection("tulip")
-): Promise<ProtocolRates> {
+export const fetch: Fetch = async (connection = defaultConnection("tulip")) => {
   const reserves = LENDING_RESERVES.map((reserve) => {
     const token = findTokenByMint(reserve.liquidity_supply_token_mint)
 

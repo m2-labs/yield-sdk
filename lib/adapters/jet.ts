@@ -6,14 +6,12 @@ import {
 } from "@jet-lab/jet-engine"
 import { findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { Fetch } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export const fetch = async (
-  connection = defaultConnection("jet")
-): Promise<ProtocolRates> => {
+export const fetch: Fetch = async (connection = defaultConnection("jet")) => {
   const provider = buildProvider(connection)
   const client = await JetClient.connect(provider, true)
   const market = await JetMarket.load(client, JET_MARKET_ADDRESS)

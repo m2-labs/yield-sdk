@@ -1,12 +1,10 @@
 import { findTokenByMint } from "@m2-labs/token-amount"
 import { Port, ReserveInfo } from "@port.finance/port-sdk"
-import { ProtocolRates } from "../types"
+import { Fetch } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export async function fetch(
-  connection = defaultConnection("port")
-): Promise<ProtocolRates> {
+export const fetch: Fetch = async (connection = defaultConnection("port")) => {
   const port = Port.forMainNet({ connection })
   const context = await port.getReserveContext()
   const reserves: ReserveInfo[] = context.getAllReserves()
