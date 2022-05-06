@@ -1,3 +1,4 @@
+import { TokenInfo } from "@m2-labs/token-amount"
 import { PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
 
@@ -20,8 +21,13 @@ export type ProtocolRates = {
 }
 
 export type AssetRate = {
-  asset: string
-  mint: PublicKey
+  symbol: string
+  token: TokenInfo
   deposit?: Decimal
   borrow?: Decimal
+
+  /** @deprecated */
+  asset: string
+  /** @deprecated */
+  mint: PublicKey
 }

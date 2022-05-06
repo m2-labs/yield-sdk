@@ -23,7 +23,9 @@ test(".fetchAll() fetches the all rates", async () => {
   for (let i = 0; i < rates.length; i++) {
     const rate = rates[i]
 
-    expect(rate.rates.find(({ asset }) => asset === "USDC")).toBeDefined()
+    expect(
+      rate.rates.find(({ token }) => token.symbol === "USDC")
+    ).toBeDefined()
     await expectSupported(rate.rates)
   }
 })

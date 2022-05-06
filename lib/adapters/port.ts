@@ -1,9 +1,9 @@
+import { findTokenByMint } from "@m2-labs/token-amount"
 import { Port, ReserveInfo } from "@port.finance/port-sdk"
-import { PublicKey } from "@solana/web3.js"
 import { ProtocolRates } from "../types"
 import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
-import { findTokenByMint } from "../utils/tokens"
+import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
 export async function fetch(
   connection = defaultConnection("port")
@@ -19,16 +19,12 @@ export async function fetch(
       return
     }
 
-    return {
-      asset: token.symbol,
-      mint: new PublicKey(token.address),
+    return buildAssetRate({
+      token,
       deposit: reserve.getSupplyApy().getUnchecked().toNumber(),
       borrow: reserve.getBorrowApy().getUnchecked().toNumber()
-    }
+    })
   })
 
-  return {
-    protocol: "port",
-    rates: compact(rates)
-  }
+  return buildProtocolRates("port", rates)
 }

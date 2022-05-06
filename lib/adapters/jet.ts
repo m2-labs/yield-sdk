@@ -4,13 +4,13 @@ import {
   JetReserve,
   JET_MARKET_ADDRESS
 } from "@jet-lab/jet-engine"
-import { PublicKey } from "@solana/web3.js"
+import { findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
 import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
-import { findTokenByMint } from "../utils/tokens"
+import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
 export const fetch = async (
   connection = defaultConnection("jet")
@@ -27,16 +27,12 @@ export const fetch = async (
       return
     }
 
-    return {
-      asset: token.symbol,
-      mint: new PublicKey(token.address),
+    return buildAssetRate({
+      token,
       deposit: new Decimal(reserve.data.depositApy),
       borrow: new Decimal(reserve.data.borrowApr)
-    }
+    })
   })
 
-  return {
-    protocol: "jet",
-    rates: compact(rates)
-  }
+  return buildProtocolRates("jet", rates)
 }

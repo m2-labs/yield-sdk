@@ -7,8 +7,8 @@ test("fetches the solend rates", async () => {
   expect(rates.protocol).toBe("solend-stable")
   expect(rates.rates.length).toBeTruthy()
 
-  expect(rates.rates.find(({ asset }) => asset === "USDT")).toBeDefined()
-  expect(rates.rates.find(({ asset }) => asset === "USDC")).toBeDefined()
+  expect(rates.rates.find(({ token }) => token.symbol === "USDT")).toBeDefined()
+  expect(rates.rates.find(({ token }) => token.symbol === "USDC")).toBeDefined()
 
   await expectSupported(rates.rates)
 })

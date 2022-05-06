@@ -1,11 +1,11 @@
 import { Config, IDS, MangoClient } from "@blockworks-foundation/mango-client"
-import { PublicKey } from "@solana/web3.js"
+import { findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
 import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
-import { findTokenByMint } from "../utils/tokens"
+import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
 export const fetch = async (
   connection = defaultConnection("mango")
@@ -44,16 +44,12 @@ export const fetch = async (
     const borrowRate = mangoGroup.getBorrowRate(tokenIndex)
     const depositRate = mangoGroup.getDepositRate(tokenIndex)
 
-    return {
-      asset: token.symbol,
-      mint: new PublicKey(token.address),
+    return buildAssetRate({
+      token,
       deposit: new Decimal(depositRate.toNumber()),
       borrow: new Decimal(borrowRate.toNumber())
-    }
+    })
   })
 
-  return {
-    protocol: "mango",
-    rates: compact(rates)
-  }
+  return buildProtocolRates("mango", rates)
 }
