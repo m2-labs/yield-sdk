@@ -3,11 +3,12 @@ import {
   createAssetPoolLoader,
   TokenID
 } from "@apricot-lend/sdk-ts"
-import { Connection, PublicKey } from "@solana/web3.js"
+import { findTokenByMint } from "@m2-labs/token-amount"
+import { Connection } from "@solana/web3.js"
 import { ProtocolRates } from "../types"
 import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
-import { findTokenByMint } from "../utils/tokens"
+import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
 export const fetch = async (
   connection: Connection = defaultConnection("apricot")
@@ -35,17 +36,13 @@ export const fetch = async (
         return
       }
 
-      return {
-        asset: token.symbol,
-        mint: new PublicKey(token.address),
+      return buildAssetRate({
+        token,
         deposit: depositRate,
         borrow: borrowRate
-      }
+      })
     }
   )
 
-  return {
-    protocol: "apricot",
-    rates: compact(rates)
-  }
+  return buildProtocolRates("apricot", rates)
 }

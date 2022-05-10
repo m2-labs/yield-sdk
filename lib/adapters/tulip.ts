@@ -1,3 +1,4 @@
+import { findTokenByMint } from "@m2-labs/token-amount"
 import { publicKey, u8, u64, u128, struct, bool } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import TULIP_TOKENS from "@tulip-protocol/platform-sdk/constants/lending_info.json"
@@ -6,7 +7,7 @@ import { ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
 import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
-import { findTokenByMint } from "../utils/tokens"
+import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
 const LENDING_RESERVES = TULIP_TOKENS.lending.reserves
 const DURATION = { DAILY: 144, WEEKLY: 1008, YEARLY: 52560 }
@@ -158,16 +159,12 @@ export async function fetch(
     const borrowAPY = compound(dailyBorrowRate, DURATION.YEARLY).div(100)
     const lendAPY = compound(dailyLendingRate, DURATION.YEARLY).div(100)
 
-    return {
-      asset: token.symbol,
-      mint: new PublicKey(token.address),
+    return buildAssetRate({
+      token,
       deposit: lendAPY,
       borrow: borrowAPY
-    }
+    })
   })
 
-  return {
-    protocol: "tulip",
-    rates: compact(rates)
-  }
+  return buildProtocolRates("tulip", rates)
 }

@@ -5,8 +5,7 @@ const RPCs = [
   "https://api.mainnet-beta.solana.com",
   "https://solana-api.projectserum.com",
   "https://rpc.ankr.com/solana",
-  "https://solana.public-rpc.com",
-  "https://api.rpcpool.com"
+  "https://solana.public-rpc.com"
 ]
 
 export const defaultConnection = (protocol?: string): Connection => {

@@ -1,3 +1,4 @@
+import { findTokenByMint } from "@m2-labs/token-amount"
 import { BN } from "@project-serum/anchor"
 import { publicKey, u8, u64, u128, struct } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
@@ -6,7 +7,7 @@ import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
 import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
-import { findTokenByMint } from "../utils/tokens"
+import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
 const LARIX_RESERVE_IDS = [
   new PublicKey("DC832AzxQMGDaVLGiRQfRCkyXi6PUPjQyQfMbVRRjtKA"), // USDT
@@ -223,16 +224,12 @@ export async function fetch(
       return
     }
 
-    return {
-      asset: token.symbol,
-      mint: new PublicKey(token.address),
+    return buildAssetRate({
+      token,
       deposit: interestData.deposit,
       borrow: interestData.borrow
-    }
+    })
   })
 
-  return {
-    protocol: "larix",
-    rates: compact(rates)
-  }
+  return buildProtocolRates("larix", rates)
 }

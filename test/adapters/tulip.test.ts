@@ -7,8 +7,8 @@ test("fetches the tulip rates", async () => {
   expect(rates.protocol).toBe("tulip")
   expect(rates.rates.length).toBeTruthy()
 
-  expect(rates.rates.find(({ asset }) => asset === "SOL")).toBeDefined()
-  expect(rates.rates.find(({ asset }) => asset === "USDC")).toBeDefined()
+  expect(rates.rates.find(({ token }) => token.symbol === "SOL")).toBeDefined()
+  expect(rates.rates.find(({ token }) => token.symbol === "USDC")).toBeDefined()
 
   await expectSupported(rates.rates)
 })
