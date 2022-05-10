@@ -7,7 +7,6 @@ import {
 import { findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
-import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
@@ -20,8 +19,8 @@ export const fetch = async (
   const market = await JetMarket.load(client, JET_MARKET_ADDRESS)
   const reserves = await JetReserve.loadMultiple(client, market)
 
-  const rates = await asyncMap(reserves, async (reserve) => {
-    const token = await findTokenByMint(reserve.data.tokenMint)
+  const rates = reserves.map((reserve) => {
+    const token = findTokenByMint(reserve.data.tokenMint)
 
     if (!token) {
       return

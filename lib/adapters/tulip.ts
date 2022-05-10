@@ -5,7 +5,7 @@ import TULIP_TOKENS from "@tulip-protocol/platform-sdk/constants/lending_info.js
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
-import { asyncMap, compact } from "../utils/array-fns"
+import { compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
@@ -76,8 +76,8 @@ const compound = (amount: Decimal, timeframe: number) => {
 export async function fetch(
   connection = defaultConnection("tulip")
 ): Promise<ProtocolRates> {
-  const reserves = await asyncMap(LENDING_RESERVES, async (reserve) => {
-    const token = await findTokenByMint(reserve.liquidity_supply_token_mint)
+  const reserves = LENDING_RESERVES.map((reserve) => {
+    const token = findTokenByMint(reserve.liquidity_supply_token_mint)
 
     if (!token) {
       return
@@ -88,7 +88,7 @@ export async function fetch(
 
   const infos = await connection.getMultipleAccountsInfo(compact(reserves))
 
-  const rates = await asyncMap(infos, async (info, i) => {
+  const rates = infos.map((info, i) => {
     const reservePubKey = reserves[i]
 
     if (!info || !reservePubKey) {
@@ -99,7 +99,7 @@ export async function fetch(
       asPublicKey(r.account).equals(reservePubKey)
     )
 
-    const token = await findTokenByMint(reserve?.liquidity_supply_token_mint)
+    const token = findTokenByMint(reserve?.liquidity_supply_token_mint)
 
     if (!token || !reserve) {
       return

@@ -5,7 +5,6 @@ import { PublicKey } from "@solana/web3.js"
 import * as BufferLayout from "buffer-layout"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
-import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
@@ -211,13 +210,13 @@ export async function fetch(
 ): Promise<ProtocolRates> {
   const infos = await connection.getMultipleAccountsInfo(LARIX_RESERVE_IDS)
 
-  const rates = await asyncMap(infos, async (info) => {
+  const rates = infos.map((info) => {
     if (!info) {
       return
     }
 
     const reserve: Reserve = RESERVE_LAYOUT.decode(info.data)
-    const token = await findTokenByMint(reserve.liquidity.mintPubkey)
+    const token = findTokenByMint(reserve.liquidity.mintPubkey)
     const interestData = calculateInterest(reserve)
 
     if (!token || !interestData) {

@@ -4,7 +4,6 @@ import { PublicKey } from "@solana/web3.js"
 import { Cluster, createProgram, State } from "@zero_one/client"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
-import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
@@ -22,8 +21,8 @@ export async function fetch(
   const globalState = await program.account.globalState.fetch(globalStateKey)
   const state: State = await State.load(program, globalState.state)
 
-  const rates = await asyncMap(Object.values(state.assets), async (a) => {
-    const token = await findTokenByMint(a.mint)
+  const rates = Object.values(state.assets).map((a) => {
+    const token = findTokenByMint(a.mint)
 
     if (!token) {
       return

@@ -3,7 +3,6 @@ import { findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
-import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
@@ -33,8 +32,8 @@ export const fetch = async (
   )
   const mangoGroup = await client.getMangoGroup(groupConfig.publicKey)
   await mangoGroup.loadRootBanks(connection)
-  const rates = await asyncMap(groupConfig.tokens, async (t) => {
-    const token = await findTokenByMint(t.mintKey)
+  const rates = groupConfig.tokens.map((t) => {
+    const token = findTokenByMint(t.mintKey)
 
     if (!token) {
       return

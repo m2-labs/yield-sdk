@@ -1,7 +1,6 @@
 import { findTokenByMint } from "@m2-labs/token-amount"
 import { Port, ReserveInfo } from "@port.finance/port-sdk"
 import { ProtocolRates } from "../types"
-import { asyncMap, compact } from "../utils/array-fns"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
@@ -12,8 +11,8 @@ export async function fetch(
   const context = await port.getReserveContext()
   const reserves: ReserveInfo[] = context.getAllReserves()
 
-  const rates = await asyncMap(reserves, async (reserve) => {
-    const token = await findTokenByMint(reserve.getAssetMintId())
+  const rates = reserves.map((reserve) => {
+    const token = findTokenByMint(reserve.getAssetMintId())
 
     if (!token) {
       return
