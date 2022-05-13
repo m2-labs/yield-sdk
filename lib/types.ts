@@ -18,6 +18,13 @@ export type Protocol =
   | "solend-turbo"
   | "tulip"
 
+export type ProtocolFeature =
+  | "fetch"
+  | "deposit"
+  | "withdraw"
+  | "getDepositedBalance"
+  | "getMaximumDeposit"
+
 export type ProtocolRates = {
   protocol: Protocol
   rates: AssetRate[]
@@ -40,7 +47,6 @@ export type FetchOptions = {
   tokens?: TokenInfoLike[]
 }
 
-// TODO: Do we need this?
 export type Fetch<T = void> = (
   opts: DefaultOptions,
   adapterOpts?: T
