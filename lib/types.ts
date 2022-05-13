@@ -33,6 +33,13 @@ export type AssetRate = {
   mint: PublicKey
 }
 
+export type ProtocolFeature =
+  | "fetch"
+  | "deposit"
+  | "withdraw"
+  | "getDepositedBalance"
+  | "getMaximumDeposit"
+
 export type Fetch = (
   connection?: Connection,
   opts?: Record<string, unknown>

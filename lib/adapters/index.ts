@@ -1,6 +1,6 @@
 import { TokenAmount, TokenInfoLike } from "@m2-labs/token-amount"
 import { Connection, Transaction } from "@solana/web3.js"
-import type { Protocol, ProtocolRates } from "../types"
+import type { Protocol, ProtocolFeature, ProtocolRates } from "../types"
 import { PublicKeyLike } from "../utils"
 import { fetch as zeroOne } from "./01"
 import { fetch as apricot } from "./apricot"
@@ -180,5 +180,23 @@ export const withdraw = async (
       return solendTurboWithdraw(amount, publicKey, connection)
     default:
       throw new Error(`Unsupported protocol: ${protocol}`)
+  }
+}
+
+export const supportedFeatures = (protocol: Protocol): ProtocolFeature[] => {
+  switch (protocol) {
+    case "francium":
+    case "solend":
+    case "solend-stable":
+    case "solend-turbo":
+      return [
+        "fetch",
+        "deposit",
+        "withdraw",
+        "getDepositedBalance",
+        "getMaximumDeposit"
+      ]
+    default:
+      return ["fetch"]
   }
 }
