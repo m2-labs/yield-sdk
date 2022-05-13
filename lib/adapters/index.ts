@@ -195,7 +195,9 @@ export const withdraw = async (
   }
 }
 
-export const supportedFeatures = (protocol: Protocol): ProtocolFeature[] => {
+export const supportedFeatures = (
+  protocol: Protocol | string
+): ProtocolFeature[] => {
   switch (protocol) {
     case "francium":
     case "solend":
@@ -208,7 +210,17 @@ export const supportedFeatures = (protocol: Protocol): ProtocolFeature[] => {
         "getDepositedBalance",
         "getMaximumDeposit"
       ]
-    default:
+
+    case "apricot":
+    case "jet":
+    case "larix":
+    case "mango":
+    case "port":
+    case "tulip":
+    case "01":
       return ["fetch"]
+
+    default:
+      return []
   }
 }
