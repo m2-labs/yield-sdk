@@ -12,16 +12,15 @@ const LARIX_RESERVE_IDS = [
   new PublicKey("DC832AzxQMGDaVLGiRQfRCkyXi6PUPjQyQfMbVRRjtKA"), // USDT
   new PublicKey("Emq1qT9MyyB5eHfftF5thYme84hoEwh4TCjm31K2Xxif"), // USDC
   new PublicKey("9oxCAYbaien8bqjhsGpfVGEV32GJyQ8fSRMsPzczHTEb"), // BTC
-  new PublicKey("Egw1PCmsm3kAWnFtKFCJkTwi2EMfBi5P4Zfz6iURonFh"), // soETH
+  // new PublicKey("Egw1PCmsm3kAWnFtKFCJkTwi2EMfBi5P4Zfz6iURonFh"), // soETH
   new PublicKey("2RcrbkGNcfy9mbarLCCRYdW3hxph7pSbP38x35MR2Bjt"), // SOL
   new PublicKey("GaX5diaQz7imMTeNYs5LPAHX6Hq1vKtxjBYzLkjXipMh"), // mSOL
-  new PublicKey("AwL4nHEPDKL7GW91czV4dUAp72kAwMBq1kBvexUYDBMm"), // soFTT
-  new PublicKey("9xdoHwJr4tD2zj3QVpWrzafBKgLZUQWZ2UYPkqyAhQf6"), // SRM
-  new PublicKey("7PwLriJiW2hRdviqnCEAHwvL21kptG1gs4jrZPqr3uMf"), // RAY
-  new PublicKey("3GixAiDQgnCkMG6JDA1mxnDPHGjYkrNhWSYjLPzzN3Bs"), // ETH
-  new PublicKey("FStv7oj29DghUcCRDRJN9sEkB4uuh4SqWBY9pvSQ4Rch"), // stSOL
-  new PublicKey("ErwYs9UCVik6oLKTZgM5TYLMYU2JTVARVawwJKxMEqbp"), // FTT
-  new PublicKey("4JZs57NTqFPJxNX4HpqjsF9oKtnZnK3fJ7jyuUhnnh6o") // UST
+  // new PublicKey("AwL4nHEPDKL7GW91czV4dUAp72kAwMBq1kBvexUYDBMm"), // soFTT
+  // new PublicKey("9xdoHwJr4tD2zj3QVpWrzafBKgLZUQWZ2UYPkqyAhQf6"), // SRM
+  // new PublicKey("7PwLriJiW2hRdviqnCEAHwvL21kptG1gs4jrZPqr3uMf"), // RAY
+  new PublicKey("3GixAiDQgnCkMG6JDA1mxnDPHGjYkrNhWSYjLPzzN3Bs") // ETH
+  // new PublicKey("FStv7oj29DghUcCRDRJN9sEkB4uuh4SqWBY9pvSQ4Rch"), // stSOL
+  // new PublicKey("ErwYs9UCVik6oLKTZgM5TYLMYU2JTVARVawwJKxMEqbp"), // FTT
 ]
 
 const RESERVE_LAYOUT = struct([

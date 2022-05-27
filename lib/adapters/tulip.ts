@@ -133,19 +133,19 @@ export const fetch: Fetch = async (connection = defaultConnection("tulip")) => {
     const borrowAPR = calculateBorrowAPR(
       utilization,
       "RAY" === reserve.name,
-      "ORCA" === reserve.name ||
-        "whETH" === reserve.name ||
-        "mSOL" === reserve.name ||
+      // "ORCA" === reserve.name ||
+      //   "whETH" === reserve.name ||
+      "mSOL" === reserve.name ||
         "BTC" === reserve.name ||
-        "GENE" === reserve.name ||
-        "SAMO" === reserve.name ||
-        "DFL" === reserve.name ||
-        "CAVE" === reserve.name ||
-        "REAL" === reserve.name ||
-        "wbWBNB" === reserve.name ||
-        "MBS" === reserve.name ||
-        "SHDW" === reserve.name ||
-        "BASIS" === reserve.name
+        // "GENE" === reserve.name ||
+        "SAMO" === reserve.name
+      // "DFL" === reserve.name ||
+      // "CAVE" === reserve.name ||
+      // "REAL" === reserve.name ||
+      // "wbWBNB" === reserve.name ||
+      // "MBS" === reserve.name ||
+      // "SHDW" === reserve.name ||
+      // "BASIS" === reserve.name
     )
 
     if (!borrowAPR) {
