@@ -22,13 +22,13 @@ test("fetches the solend rates", async () => {
 })
 
 test("getMaximumDeposit() fetches the maximum available deposit based on utilization", async () => {
-  const maximumDeposit = await getMaximumDeposit(TokenInfo.USDC)
+  const maximumDeposit = await getMaximumDeposit("USDC")
 
   expect(maximumDeposit.gt(0)).toBe(true)
 })
 
 test("getDepositedBalance() returns the amount a user has deposited", async () => {
-  const depositedAmount = await getDepositedBalance(TokenInfo.USDC, PUBLIC_KEY)
+  const depositedAmount = await getDepositedBalance("USDC", PUBLIC_KEY)
 
   expect(depositedAmount.eq(0)).toBe(true)
 })
