@@ -1,7 +1,7 @@
 import { findTokenByMint } from "@m2-labs/token-amount"
 import { publicKey, u8, u64, u128, struct, bool } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
-import TULIP_TOKENS from "@tulip-protocol/platform-sdk/constants/lending_info.json"
+import TULIP_TOKENS from "@tulip-protocol/platform-sdk/src/constants/lending_info.json"
 import Decimal from "decimal.js"
 import { ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"

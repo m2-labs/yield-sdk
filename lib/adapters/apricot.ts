@@ -21,8 +21,7 @@ export const fetch = async (
       assetPoolLoader.getAssetPool(TokenID.mSOL),
       assetPoolLoader.getAssetPool(TokenID.SOL),
       assetPoolLoader.getAssetPool(TokenID.USDC),
-      assetPoolLoader.getAssetPool(TokenID.USDT),
-      assetPoolLoader.getAssetPool(TokenID.USTv2)
+      assetPoolLoader.getAssetPool(TokenID.USDT)
     ])
   ).filter(Boolean) as ApiAssetPool[]
 
