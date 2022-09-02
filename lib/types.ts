@@ -7,6 +7,7 @@ export type Protocol =
   | "apricot"
   | "francium"
   | "jet"
+  | "jetv2"
   | "larix"
   | "mango"
   | "port"

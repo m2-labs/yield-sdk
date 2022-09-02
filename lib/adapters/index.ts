@@ -4,6 +4,7 @@ import { fetch as zeroOne } from "./01"
 import { fetch as apricot } from "./apricot"
 import { fetch as francium } from "./francium"
 import { fetch as jet } from "./jet"
+import { fetch as jetv2 } from "./jetv2"
 import { fetch as larix } from "./larix"
 import { fetch as mango } from "./mango"
 import { fetch as port } from "./port"
@@ -24,6 +25,8 @@ export const fetch = async (
         return francium(connection)
       case "jet":
         return jet(connection)
+      case "jetv2":
+        return jetv2(connection)
       case "larix":
         return larix(connection)
       case "mango":
@@ -56,6 +59,7 @@ export const fetchAll = async (
     fetch("apricot", connection),
     fetch("francium", connection),
     fetch("jet", connection),
+    fetch("jetv2", connection),
     fetch("larix", connection),
     fetch("mango", connection),
     fetch("port", connection),
