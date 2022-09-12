@@ -1,12 +1,11 @@
-import { findToken, findTokenByMint, TokenInfo } from "@m2-labs/token-amount"
+import { findTokenByMint } from "@m2-labs/token-amount"
 import { BN } from "@project-serum/anchor"
 import { publicKey, u8, u64, u128, struct } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import * as BufferLayout from "buffer-layout"
 import Decimal from "decimal.js"
-import { FetchOptions, ProtocolRates } from "../types"
-import { defaultConnection } from "../utils/connection"
-import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
+import { fetchHandler } from "../utils/fetch-fns"
+import { buildAssetRate } from "../utils/rate-fns"
 
 const LARIX_RESERVE_IDS: Record<string, PublicKey> = {
   USDT: new PublicKey("DC832AzxQMGDaVLGiRQfRCkyXi6PUPjQyQfMbVRRjtKA"), // USDT
@@ -204,39 +203,35 @@ const calculateInterest = (
   }
 }
 
-export async function fetch({
-  connection = defaultConnection("larix"),
-  tokens
-}: FetchOptions = {}): Promise<ProtocolRates> {
-  const desiredTokens = tokens?.length
-    ? (tokens.map(findToken).filter(Boolean) as TokenInfo[])
-    : undefined
+export const fetch = fetchHandler(
+  "larix",
+  async ({ connection, desiredTokens }) => {
+    const reserveIds = desiredTokens
+      ? desiredTokens.map((t) => LARIX_RESERVE_IDS[t.symbol]).filter(Boolean)
+      : Object.values(LARIX_RESERVE_IDS)
 
-  const reserveIds = desiredTokens
-    ? desiredTokens.map((t) => LARIX_RESERVE_IDS[t.symbol]).filter(Boolean)
-    : Object.values(LARIX_RESERVE_IDS)
+    const infos = await connection.getMultipleAccountsInfo(reserveIds)
 
-  const infos = await connection.getMultipleAccountsInfo(reserveIds)
+    const rates = infos.map((info) => {
+      if (!info) {
+        return
+      }
 
-  const rates = infos.map((info) => {
-    if (!info) {
-      return
-    }
+      const reserve: Reserve = RESERVE_LAYOUT.decode(info.data)
+      const token = findTokenByMint(reserve.liquidity.mintPubkey)
+      const interestData = calculateInterest(reserve)
 
-    const reserve: Reserve = RESERVE_LAYOUT.decode(info.data)
-    const token = findTokenByMint(reserve.liquidity.mintPubkey)
-    const interestData = calculateInterest(reserve)
+      if (!token || !interestData) {
+        return
+      }
 
-    if (!token || !interestData) {
-      return
-    }
-
-    return buildAssetRate({
-      token,
-      deposit: interestData.deposit,
-      borrow: interestData.borrow
+      return buildAssetRate({
+        token,
+        deposit: interestData.deposit,
+        borrow: interestData.borrow
+      })
     })
-  })
 
-  return buildProtocolRates("larix", rates)
-}
+    return rates
+  }
+)

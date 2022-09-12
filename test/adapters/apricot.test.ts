@@ -7,8 +7,6 @@ test("fetches the apricot rates", async () => {
   expect(rates.protocol).toBe("apricot")
   expect(rates.rates.length).toBeTruthy()
 
-  console.log(rates.rates)
-
   expect(rates.rates.find(({ token }) => token.symbol === "SOL")).toBeDefined()
   expect(rates.rates.find(({ token }) => token.symbol === "USDC")).toBeDefined()
 

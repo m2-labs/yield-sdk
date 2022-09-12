@@ -1,39 +1,34 @@
-import { findToken, findTokenBySymbol } from "@m2-labs/token-amount"
+import { findTokenBySymbol } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
 import { lendingPoolList } from "francium-sdk/dist/constants/lend/pools"
 import { getLendingPoolInfo } from "francium-sdk/dist/model"
-import { FetchOptions, ProtocolRates } from "../types"
-import { defaultConnection } from "../utils/connection"
-import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
+import { fetchHandler } from "../utils/fetch-fns"
+import { buildAssetRate } from "../utils/rate-fns"
 
-export const fetch = async ({
-  connection = defaultConnection("francium"),
-  tokens
-}: FetchOptions = {}): Promise<ProtocolRates> => {
-  const desiredTokens = tokens?.length
-    ? tokens.map(findToken).filter(Boolean)
-    : undefined
+export const fetch = fetchHandler(
+  "francium",
+  async ({ connection, desiredTokens }) => {
+    const pools = desiredTokens
+      ? lendingPoolList.filter((p) =>
+          desiredTokens?.find((t) => t?.symbol === p.pool)
+        )
+      : lendingPoolList
 
-  const pools = desiredTokens
-    ? lendingPoolList.filter((p) =>
-        desiredTokens?.find((t) => t?.symbol === p.pool)
-      )
-    : lendingPoolList
+    const assets = await getLendingPoolInfo(connection, pools)
 
-  const assets = await getLendingPoolInfo(connection, pools)
+    const rates = assets.map(({ pool, apy }) => {
+      const token = findTokenBySymbol(pool)
 
-  const rates = assets.map(({ pool, apy }) => {
-    const token = findTokenBySymbol(pool)
+      if (!token) {
+        return
+      }
 
-    if (!token) {
-      return
-    }
-
-    return buildAssetRate({
-      token,
-      deposit: new Decimal(apy).div(100)
+      return buildAssetRate({
+        token,
+        deposit: new Decimal(apy).div(100)
+      })
     })
-  })
 
-  return buildProtocolRates("francium", rates)
-}
+    return rates
+  }
+)
