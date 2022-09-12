@@ -18,6 +18,8 @@ export const defaultConnection = (protocol?: Protocol): Connection => {
   const rpc =
     protocol === "mango"
       ? IDS.cluster_urls.mainnet
+      : protocol === "port"
+      ? "https://solana-api.projectserum.com"
       : RPCs[Math.floor(Math.random() * RPCs.length)]
 
   return new Connection(rpc, "confirmed")
