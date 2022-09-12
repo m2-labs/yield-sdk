@@ -7,7 +7,24 @@ test("fetches the apricot rates", async () => {
   expect(rates.protocol).toBe("apricot")
   expect(rates.rates.length).toBeTruthy()
 
+  console.log(rates.rates)
+
   expect(rates.rates.find(({ token }) => token.symbol === "SOL")).toBeDefined()
+  expect(rates.rates.find(({ token }) => token.symbol === "USDC")).toBeDefined()
+
+  await expectSupported(rates.rates)
+})
+
+test("allows filtering tokens", async () => {
+  const rates = await fetch({ tokens: ["USDC"] })
+
+  expect(rates.protocol).toBe("apricot")
+  expect(rates.rates.length).toBeTruthy()
+
+  expect(
+    rates.rates.find(({ token }) => token.symbol === "SOL")
+  ).toBeUndefined()
+
   expect(rates.rates.find(({ token }) => token.symbol === "USDC")).toBeDefined()
 
   await expectSupported(rates.rates)
