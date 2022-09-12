@@ -1,4 +1,4 @@
-import { findTokenByMint } from "@m2-labs/token-amount"
+import { findToken, findTokenByMint } from "@m2-labs/token-amount"
 import { utils } from "@project-serum/anchor"
 import { PublicKey } from "@solana/web3.js"
 import { Cluster, createProgram, State } from "@zero_one/client"
@@ -13,6 +13,9 @@ export async function fetch({
   tokens
 }: FetchOptions = {}): Promise<ProtocolRates> {
   const provider = buildProvider(connection)
+  const desiredTokens = tokens?.length
+    ? tokens.map(findToken).filter(Boolean)
+    : undefined
   const program = createProgram(provider, Cluster.Mainnet)
 
   const [globalStateKey] = await PublicKey.findProgramAddress(
@@ -29,11 +32,13 @@ export async function fetch({
       return
     }
 
-    return buildAssetRate({
-      token,
-      deposit: new Decimal(a.supplyApy).div(100),
-      borrow: new Decimal(a.borrowsApy).div(100)
-    })
+    if (!desiredTokens || desiredTokens.includes(token)) {
+      return buildAssetRate({
+        token,
+        deposit: new Decimal(a.supplyApy).div(100),
+        borrow: new Decimal(a.borrowsApy).div(100)
+      })
+    }
   })
 
   return buildProtocolRates("01", rates)
