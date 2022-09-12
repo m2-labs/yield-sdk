@@ -2,13 +2,14 @@ import { findTokenBySymbol } from "@m2-labs/token-amount"
 import { Connection } from "@solana/web3.js"
 import Decimal from "decimal.js"
 import FranciumSDK from "francium-sdk"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export const fetch = async (
-  connection: Connection = defaultConnection("francium")
-): Promise<ProtocolRates> => {
+export const fetch = async ({
+  connection = defaultConnection("francium"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> => {
   const fr = new FranciumSDK({ connection })
 
   const assets = await fr.getLendingPoolInfo()

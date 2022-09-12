@@ -3,14 +3,15 @@ import { utils } from "@project-serum/anchor"
 import { PublicKey } from "@solana/web3.js"
 import { Cluster, createProgram, State } from "@zero_one/client"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export async function fetch(
-  connection = defaultConnection("01")
-): Promise<ProtocolRates> {
+export async function fetch({
+  connection = defaultConnection("01"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> {
   const provider = buildProvider(connection)
   const program = createProgram(provider, Cluster.Mainnet)
 

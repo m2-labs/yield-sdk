@@ -5,13 +5,14 @@ import {
 } from "@apricot-lend/sdk-ts"
 import { findTokenByMint } from "@m2-labs/token-amount"
 import { Connection } from "@solana/web3.js"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export const fetch = async (
-  connection: Connection = defaultConnection("apricot")
-): Promise<ProtocolRates> => {
+export const fetch = async ({
+  connection = defaultConnection("apricot"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> => {
   const assetPoolLoader = await createAssetPoolLoader(connection)
 
   const assetPools = (

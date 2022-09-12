@@ -1,5 +1,5 @@
 import { TokenInfo } from "@m2-labs/token-amount"
-import { PublicKey } from "@solana/web3.js"
+import { Connection, PublicKey } from "@solana/web3.js"
 import Decimal from "decimal.js"
 
 export type Protocol =
@@ -31,4 +31,9 @@ export type AssetRate = {
   asset: string
   /** @deprecated */
   mint: PublicKey
+}
+
+export type FetchOptions = {
+  connection?: Connection
+  tokens?: string[]
 }

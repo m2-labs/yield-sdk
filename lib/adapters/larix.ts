@@ -4,7 +4,7 @@ import { publicKey, u8, u64, u128, struct } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import * as BufferLayout from "buffer-layout"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
@@ -205,9 +205,10 @@ const calculateInterest = (
   }
 }
 
-export async function fetch(
-  connection = defaultConnection("larix")
-): Promise<ProtocolRates> {
+export async function fetch({
+  connection = defaultConnection("larix"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> {
   const infos = await connection.getMultipleAccountsInfo(LARIX_RESERVE_IDS)
 
   const rates = infos.map((info) => {

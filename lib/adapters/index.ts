@@ -1,5 +1,4 @@
-import { Connection } from "@solana/web3.js"
-import type { Protocol, ProtocolRates } from "../types"
+import type { FetchOptions, Protocol, ProtocolRates } from "../types"
 import { fetch as zeroOne } from "./01"
 import { fetch as apricot } from "./apricot"
 import { fetch as francium } from "./francium"
@@ -15,58 +14,61 @@ import { fetch as tulip } from "./tulip"
 
 export const fetch = async (
   protocol: Protocol,
-  connection?: Connection
+  opts?: FetchOptions
 ): Promise<ProtocolRates> => {
   try {
     switch (protocol) {
       case "apricot":
-        return apricot(connection)
+        return apricot(opts)
       case "francium":
-        return francium(connection)
+        return francium(opts)
       case "jet":
-        return jet(connection)
+        return jet(opts)
       case "jetv2":
-        return jetv2(connection)
+        return jetv2(opts)
       case "larix":
-        return larix(connection)
+        return larix(opts)
       case "mango":
-        return mango(connection)
+        return mango(opts)
       case "port":
-        return port(connection)
+        return port(opts)
       case "solend":
-        return solend(connection)
+        return solend(opts)
       case "solend-stable":
-        return solendStable(connection)
+        return solendStable(opts)
       case "solend-turbo":
-        return solendTurbo(connection)
+        return solendTurbo(opts)
       case "tulip":
-        return tulip(connection)
+        return tulip(opts)
       case "01":
-        return zeroOne(connection)
+        return zeroOne(opts)
       default:
         throw new Error(`Unsupported protocol: ${protocol}`)
     }
   } catch (e) {
-    console.error(`Error fetching ${protocol} ${connection?.rpcEndpoint}`, e)
+    console.error(
+      `Error fetching ${protocol} ${opts?.connection?.rpcEndpoint}`,
+      e
+    )
     throw e
   }
 }
 
 export const fetchAll = async (
-  connection?: Connection
+  opts?: FetchOptions
 ): Promise<ProtocolRates[]> => {
   return Promise.all([
-    fetch("apricot", connection),
-    fetch("francium", connection),
-    fetch("jet", connection),
-    fetch("jetv2", connection),
-    fetch("larix", connection),
-    fetch("mango", connection),
-    fetch("port", connection),
-    fetch("solend", connection),
-    fetch("solend-stable", connection),
-    fetch("solend-turbo", connection),
-    fetch("tulip", connection),
-    fetch("01", connection)
+    fetch("apricot", opts),
+    fetch("francium", opts),
+    fetch("jet", opts),
+    fetch("jetv2", opts),
+    fetch("larix", opts),
+    fetch("mango", opts),
+    fetch("port", opts),
+    fetch("solend", opts),
+    fetch("solend-stable", opts),
+    fetch("solend-turbo", opts),
+    fetch("tulip", opts),
+    fetch("01", opts)
   ])
 }

@@ -1,14 +1,15 @@
 import { Config, IDS, MangoClient } from "@blockworks-foundation/mango-client"
 import { findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export const fetch = async (
-  connection = defaultConnection("mango")
-): Promise<ProtocolRates> => {
+export const fetch = async ({
+  connection = defaultConnection("mango"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> => {
   const cluster = "mainnet"
   const group = "mainnet.1"
   const config = new Config(IDS)

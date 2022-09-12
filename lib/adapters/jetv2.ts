@@ -7,7 +7,7 @@ import {
 import { findTokenByMint } from "@m2-labs/token-amount"
 import crossFetch from "cross-fetch"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildProvider } from "../utils/provider"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
@@ -20,9 +20,10 @@ const marginConfig = async () => {
   return (await response.json())["mainnet-beta"]
 }
 
-export const fetch = async (
-  connection = defaultConnection("jet")
-): Promise<ProtocolRates> => {
+export const fetch = async ({
+  connection = defaultConnection("jetv2"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> => {
   const preloadedConfig = await marginConfig()
   const config = await MarginClient.getConfig(preloadedConfig)
   const provider = buildProvider(connection)

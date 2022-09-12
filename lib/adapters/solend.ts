@@ -1,13 +1,14 @@
 import { findTokenByMint } from "@m2-labs/token-amount"
 import { SolendMarket } from "@solendprotocol/solend-sdk"
 import Decimal from "decimal.js"
-import { ProtocolRates } from "../types"
+import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
 import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
 
-export async function fetch(
-  connection = defaultConnection("solend")
-): Promise<ProtocolRates> {
+export async function fetch({
+  connection = defaultConnection("solend"),
+  tokens
+}: FetchOptions = {}): Promise<ProtocolRates> {
   const market = await SolendMarket.initialize(connection)
   await market.loadReserves()
 
