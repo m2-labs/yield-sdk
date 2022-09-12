@@ -4,7 +4,7 @@ import {
   JetReserve,
   JET_MARKET_ADDRESS
 } from "@jet-lab/jet-engine"
-import { findTokenByMint } from "@m2-labs/token-amount"
+import { findToken, findTokenByMint } from "@m2-labs/token-amount"
 import Decimal from "decimal.js"
 import { FetchOptions, ProtocolRates } from "../types"
 import { defaultConnection } from "../utils/connection"
@@ -16,7 +16,11 @@ export const fetch = async ({
   tokens
 }: FetchOptions = {}): Promise<ProtocolRates> => {
   const provider = buildProvider(connection)
-  const client = await JetClient.connect(provider, true)
+  const desiredTokens = tokens?.length
+    ? tokens.map(findToken).filter(Boolean)
+    : undefined
+
+  const client = await JetClient.connect(provider, false)
   const market = await JetMarket.load(client, JET_MARKET_ADDRESS)
   const reserves = await JetReserve.loadMultiple(client, market)
 
@@ -27,11 +31,13 @@ export const fetch = async ({
       return
     }
 
-    return buildAssetRate({
-      token,
-      deposit: new Decimal(reserve.data.depositApy),
-      borrow: new Decimal(reserve.data.borrowApr)
-    })
+    if (!desiredTokens || desiredTokens.includes(token)) {
+      return buildAssetRate({
+        token,
+        deposit: new Decimal(reserve.data.depositApy),
+        borrow: new Decimal(reserve.data.borrowApr)
+      })
+    }
   })
 
   return buildProtocolRates("jet", rates)
