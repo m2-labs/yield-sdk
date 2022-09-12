@@ -7,7 +7,7 @@ import { buildAssetRate } from "../utils/rate-fns"
 
 export const fetch = fetchHandler(
   "mango",
-  async ({ connection, desiredTokens }) => {
+  async ({ connection, isDesiredToken }) => {
     const cluster = "mainnet"
     const group = "mainnet.1"
     const config = new Config(IDS)
@@ -40,7 +40,7 @@ export const fetch = fetchHandler(
         return
       }
 
-      if (!desiredTokens || desiredTokens.includes(token)) {
+      if (isDesiredToken(token)) {
         const tokenIndex = mangoGroup.getTokenIndex(t.mintKey)
         const borrowRate = mangoGroup.getBorrowRate(tokenIndex)
         const depositRate = mangoGroup.getDepositRate(tokenIndex)

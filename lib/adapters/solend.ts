@@ -6,7 +6,7 @@ import { buildAssetRate } from "../utils/rate-fns"
 
 export const fetch = fetchHandler(
   "solend",
-  async ({ connection, desiredTokens }) => {
+  async ({ connection, isDesiredToken }) => {
     const market = await SolendMarket.initialize(connection)
     await market.loadReserves()
 
@@ -17,7 +17,7 @@ export const fetch = fetchHandler(
         return
       }
 
-      if (!desiredTokens || desiredTokens.includes(token)) {
+      if (isDesiredToken(token)) {
         return buildAssetRate({
           token,
           deposit: new Decimal(reserve.stats.supplyInterestAPY),

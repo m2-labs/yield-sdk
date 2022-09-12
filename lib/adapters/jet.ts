@@ -11,7 +11,7 @@ import { buildAssetRate } from "../utils/rate-fns"
 
 export const fetch = fetchHandler(
   "jet",
-  async ({ provider, desiredTokens }) => {
+  async ({ provider, isDesiredToken }) => {
     const client = await JetClient.connect(provider, false)
     const market = await JetMarket.load(client, JET_MARKET_ADDRESS)
     const reserves = await JetReserve.loadMultiple(client, market)
@@ -23,7 +23,7 @@ export const fetch = fetchHandler(
         return
       }
 
-      if (!desiredTokens || desiredTokens.includes(token)) {
+      if (isDesiredToken(token)) {
         return buildAssetRate({
           token,
           deposit: new Decimal(reserve.data.depositApy),

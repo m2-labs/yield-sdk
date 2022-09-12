@@ -18,7 +18,7 @@ export const fetch = fetchHandler(
       await Promise.all(
         desiredTokens
           ? desiredTokens.map((t) =>
-              assetPoolLoader.getAssetPool(t?.symbol as TokenID)
+              assetPoolLoader.getAssetPool(t.symbol as TokenID)
             )
           : [
               assetPoolLoader.getAssetPool(TokenID.BTC),

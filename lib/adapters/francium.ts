@@ -10,7 +10,7 @@ export const fetch = fetchHandler(
   async ({ connection, desiredTokens }) => {
     const pools = desiredTokens
       ? lendingPoolList.filter((p) =>
-          desiredTokens?.find((t) => t?.symbol === p.pool)
+          desiredTokens?.find((t) => t.symbol === p.pool)
         )
       : lendingPoolList
 

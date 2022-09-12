@@ -14,7 +14,7 @@ const RPCs = [
 /**
  *
  */
-export const defaultConnection = (protocol?: Protocol): Connection => {
+const defaultConnection = (protocol?: Protocol): Connection => {
   const rpc =
     protocol === "mango"
       ? IDS.cluster_urls.mainnet
@@ -28,7 +28,7 @@ export const defaultConnection = (protocol?: Protocol): Connection => {
 /**
  *
  */
-export const buildProvider = (connection: Connection): AnchorProvider => {
+const buildProvider = (connection: Connection): AnchorProvider => {
   return new AnchorProvider(connection, new Wallet(Keypair.generate()), {})
 }
 
@@ -39,6 +39,7 @@ export type DefaultOptions = {
   connection: Connection
   provider: AnchorProvider
   desiredTokens?: TokenInfo[]
+  isDesiredToken: (token?: TokenInfo) => boolean
 }
 
 /**
@@ -56,9 +57,18 @@ export const defaultOptions = (
     ? (opts.tokens.map(findToken).filter(Boolean) as TokenInfo[])
     : undefined
 
+  const isDesiredToken = (token?: TokenInfo) => {
+    if (!token) {
+      return false
+    }
+
+    return !desiredTokens || desiredTokens.includes(token)
+  }
+
   return {
     connection,
     provider,
-    desiredTokens
+    desiredTokens,
+    isDesiredToken
   }
 }

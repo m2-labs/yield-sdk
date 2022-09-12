@@ -74,7 +74,7 @@ const compound = (amount: Decimal, timeframe: number) => {
 
 export const fetch = fetchHandler(
   "tulip",
-  async ({ connection, desiredTokens }) => {
+  async ({ connection, isDesiredToken }) => {
     const reserves = LENDING_RESERVES.map((reserve) => {
       const token = findTokenByMint(reserve.liquidity_supply_token_mint)
 
@@ -104,7 +104,7 @@ export const fetch = fetchHandler(
         return
       }
 
-      if (!desiredTokens || desiredTokens.includes(token)) {
+      if (isDesiredToken(token)) {
         const data = LENDING_RESERVE_LAYOUT.decode(info.data)
         const decimals = new Decimal(10).pow(token.decimals)
 

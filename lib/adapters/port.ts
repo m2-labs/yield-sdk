@@ -5,7 +5,7 @@ import { buildAssetRate } from "../utils/rate-fns"
 
 export const fetch = fetchHandler(
   "port",
-  async ({ connection, desiredTokens }) => {
+  async ({ connection, isDesiredToken }) => {
     const port = Port.forMainNet({ connection })
     const context = await port.getReserveContext()
     const reserves: ReserveInfo[] = context.getAllReserves()
@@ -17,7 +17,7 @@ export const fetch = fetchHandler(
         return
       }
 
-      if (!desiredTokens || desiredTokens.includes(token)) {
+      if (isDesiredToken(token)) {
         return buildAssetRate({
           token,
           deposit: reserve.getSupplyApy().getUnchecked().toNumber(),
