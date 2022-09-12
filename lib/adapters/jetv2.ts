@@ -1,10 +1,10 @@
 import {
-  MarginAccount,
   MarginClient,
+  MarginTokenConfig,
   MARGIN_CONFIG_URL,
   PoolManager
 } from "@jet-lab/margin"
-import { findTokenByMint } from "@m2-labs/token-amount"
+import { findToken, findTokenByMint } from "@m2-labs/token-amount"
 import crossFetch from "cross-fetch"
 import Decimal from "decimal.js"
 import { FetchOptions, ProtocolRates } from "../types"
@@ -24,9 +24,26 @@ export const fetch = async ({
   connection = defaultConnection("jetv2"),
   tokens
 }: FetchOptions = {}): Promise<ProtocolRates> => {
+  const provider = buildProvider(connection)
+  const desiredTokens = tokens?.length
+    ? tokens.map(findToken).filter(Boolean)
+    : undefined
+
   const preloadedConfig = await marginConfig()
   const config = await MarginClient.getConfig(preloadedConfig)
-  const provider = buildProvider(connection)
+
+  config.tokens = Object.entries(config.tokens).reduce(
+    (acc, [symbol, config]) => {
+      if (!desiredTokens || desiredTokens.find((t) => t?.symbol === symbol)) {
+        acc[symbol] = config
+      }
+
+      return acc
+    },
+
+    {} as Record<string, MarginTokenConfig>
+  )
+
   const programs = MarginClient.getPrograms(provider, config)
   const poolManager = new PoolManager(programs, provider)
   const pools = await poolManager.loadAll()
