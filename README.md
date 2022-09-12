@@ -2,7 +2,7 @@
 
 # yield-sdk
 
-> Achieve the best DeFi yields, in one package.
+> Find the best DeFi yields, in one package.
 
 This package aims to let you easily load all the DeFi lending and borrowing rates, as well as deposit / withdraw tokens to achieve those yields. All in one SDK.
 
