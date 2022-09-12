@@ -10,6 +10,7 @@ test(".fetchAll() fetches the all rates", async () => {
       "apricot",
       "francium",
       "jet",
+      "jetv2",
       "larix",
       "mango",
       "port",
