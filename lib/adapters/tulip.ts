@@ -3,11 +3,10 @@ import { publicKey, u8, u64, u128, struct, bool } from "@project-serum/borsh"
 import { PublicKey } from "@solana/web3.js"
 import TULIP_TOKENS from "@tulip-protocol/platform-sdk/src/constants/lending_info.json"
 import Decimal from "decimal.js"
-import { FetchOptions, ProtocolRates } from "../types"
 import { asPublicKey } from "../utils"
 import { compact } from "../utils/array-fns"
-import { defaultConnection } from "../utils/connection"
-import { buildAssetRate, buildProtocolRates } from "../utils/rate-fns"
+import { fetchHandler } from "../utils/fetch-fns"
+import { buildAssetRate } from "../utils/rate-fns"
 
 const LENDING_RESERVES = TULIP_TOKENS.lending.reserves
 const DURATION = { DAILY: 144, WEEKLY: 1008, YEARLY: 52560 }
@@ -73,99 +72,103 @@ const compound = (amount: Decimal, timeframe: number) => {
   return a.div(100).plus(1).pow(timeframe).minus(1).times(100)
 }
 
-export async function fetch({
-  connection = defaultConnection("tulip"),
-  tokens
-}: FetchOptions = {}): Promise<ProtocolRates> {
-  const reserves = LENDING_RESERVES.map((reserve) => {
-    const token = findTokenByMint(reserve.liquidity_supply_token_mint)
+export const fetch = fetchHandler(
+  "tulip",
+  async ({ connection, desiredTokens }) => {
+    const reserves = LENDING_RESERVES.map((reserve) => {
+      const token = findTokenByMint(reserve.liquidity_supply_token_mint)
 
-    if (!token) {
-      return
-    }
+      if (!token) {
+        return
+      }
 
-    return new PublicKey(reserve.account)
-  })
-
-  const infos = await connection.getMultipleAccountsInfo(compact(reserves))
-
-  const rates = infos.map((info, i) => {
-    const reservePubKey = reserves[i]
-
-    if (!info || !reservePubKey) {
-      return
-    }
-
-    const reserve = LENDING_RESERVES.find((r) =>
-      asPublicKey(r.account).equals(reservePubKey)
-    )
-
-    const token = findTokenByMint(reserve?.liquidity_supply_token_mint)
-
-    if (!token || !reserve) {
-      return
-    }
-
-    const data = LENDING_RESERVE_LAYOUT.decode(info.data)
-    const decimals = new Decimal(10).pow(token.decimals)
-
-    const availableAmount = new Decimal(
-      data.liquidity.availableAmount.toString()
-    ).div(decimals)
-
-    const platformAmountWads = new Decimal(
-      data.liquidity.platformAmountWads.toString()
-    )
-      .div(WEI_TO_UNITS)
-      .div(decimals)
-
-    const borrowedAmount = new Decimal(data.liquidity.borrowedAmount.toString())
-      .div(WEI_TO_UNITS)
-      .div(decimals)
-
-    const remainingAmount = availableAmount
-      .plus(borrowedAmount)
-      .minus(platformAmountWads)
-
-    const utilizedAmount = borrowedAmount.gt(remainingAmount)
-      ? remainingAmount
-      : borrowedAmount
-
-    const utilization = utilizedAmount.div(remainingAmount)
-
-    const borrowAPR = calculateBorrowAPR(
-      utilization,
-      "RAY" === reserve.name,
-      "ORCA" === reserve.name ||
-        "whETH" === reserve.name ||
-        "mSOL" === reserve.name ||
-        "BTC" === reserve.name ||
-        "GENE" === reserve.name ||
-        "SAMO" === reserve.name ||
-        "DFL" === reserve.name ||
-        "CAVE" === reserve.name ||
-        "REAL" === reserve.name ||
-        "wbWBNB" === reserve.name ||
-        "MBS" === reserve.name ||
-        "SHDW" === reserve.name ||
-        "BASIS" === reserve.name
-    )
-
-    if (!borrowAPR) {
-      return
-    }
-
-    const dailyBorrowRate = borrowAPR.div(365)
-    const dailyLendingRate = utilization.times(dailyBorrowRate)
-    const borrowAPY = compound(dailyBorrowRate, DURATION.YEARLY).div(100)
-    const lendAPY = compound(dailyLendingRate, DURATION.YEARLY).div(100)
-
-    return buildAssetRate({
-      token,
-      deposit: lendAPY,
-      borrow: borrowAPY
+      return new PublicKey(reserve.account)
     })
-  })
 
-  return buildProtocolRates("tulip", rates)
-}
+    const infos = await connection.getMultipleAccountsInfo(compact(reserves))
+
+    const rates = infos.map((info, i) => {
+      const reservePubKey = reserves[i]
+
+      if (!info || !reservePubKey) {
+        return
+      }
+
+      const reserve = LENDING_RESERVES.find((r) =>
+        asPublicKey(r.account).equals(reservePubKey)
+      )
+
+      const token = findTokenByMint(reserve?.liquidity_supply_token_mint)
+
+      if (!token || !reserve) {
+        return
+      }
+
+      if (!desiredTokens || desiredTokens.includes(token)) {
+        const data = LENDING_RESERVE_LAYOUT.decode(info.data)
+        const decimals = new Decimal(10).pow(token.decimals)
+
+        const availableAmount = new Decimal(
+          data.liquidity.availableAmount.toString()
+        ).div(decimals)
+
+        const platformAmountWads = new Decimal(
+          data.liquidity.platformAmountWads.toString()
+        )
+          .div(WEI_TO_UNITS)
+          .div(decimals)
+
+        const borrowedAmount = new Decimal(
+          data.liquidity.borrowedAmount.toString()
+        )
+          .div(WEI_TO_UNITS)
+          .div(decimals)
+
+        const remainingAmount = availableAmount
+          .plus(borrowedAmount)
+          .minus(platformAmountWads)
+
+        const utilizedAmount = borrowedAmount.gt(remainingAmount)
+          ? remainingAmount
+          : borrowedAmount
+
+        const utilization = utilizedAmount.div(remainingAmount)
+
+        const borrowAPR = calculateBorrowAPR(
+          utilization,
+          "RAY" === reserve.name,
+          "ORCA" === reserve.name ||
+            "whETH" === reserve.name ||
+            "mSOL" === reserve.name ||
+            "BTC" === reserve.name ||
+            "GENE" === reserve.name ||
+            "SAMO" === reserve.name ||
+            "DFL" === reserve.name ||
+            "CAVE" === reserve.name ||
+            "REAL" === reserve.name ||
+            "wbWBNB" === reserve.name ||
+            "MBS" === reserve.name ||
+            "SHDW" === reserve.name ||
+            "BASIS" === reserve.name
+        )
+
+        if (!borrowAPR) {
+          return
+        }
+
+        const dailyBorrowRate = borrowAPR.div(365)
+        const dailyLendingRate = utilization.times(dailyBorrowRate)
+        const borrowAPY = compound(dailyBorrowRate, DURATION.YEARLY).div(100)
+        const lendAPY = compound(dailyLendingRate, DURATION.YEARLY).div(100)
+
+        return buildAssetRate({
+          token,
+          deposit: lendAPY,
+          borrow: borrowAPY
+        })
+      }
+    })
+
+    return rates
+  }
+)
