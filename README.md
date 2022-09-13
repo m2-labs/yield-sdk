@@ -15,7 +15,7 @@ npm i yield-sdk
 ## Roadmap
 
 - [x] Support fetching DeFi rates on Solana.
-- [ ] Support for depositing and withdrawing tokens on Solana.
+- [-] Support for depositing and withdrawing tokens on Solana.
 - [ ] Support for fetching DeFi rates on Ethereum, Avalanche, etc.
 - [ ] Support for depositing and withdrawing tokens on other chains.
 
