@@ -170,7 +170,7 @@ export const deposit = async (
   amount: TokenAmount,
   publicKey: PublicKeyLike,
   connection?: Connection
-): Promise<Transaction[]> => {
+): Promise<Transaction> => {
   switch (protocol) {
     case "apricot":
       return apricotDeposit(amount, publicKey, connection)
@@ -192,7 +192,7 @@ export const withdraw = async (
   amount: TokenAmount,
   publicKey: PublicKeyLike,
   connection?: Connection
-): Promise<Transaction[]> => {
+): Promise<Transaction> => {
   switch (protocol) {
     case "apricot":
       return apricotWithdraw(amount, publicKey, connection)

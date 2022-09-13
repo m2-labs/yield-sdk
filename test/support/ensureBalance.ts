@@ -1,12 +1,13 @@
+import { TokenAmount } from "@m2-labs/token-amount"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { connection, TEST_KEYPAIR } from "./keypair"
 
 export const ensureBalance = async () => {
-  const startingBalanceLamports = await connection.getBalance(
-    TEST_KEYPAIR.publicKey
-  )
+  const balanceLamports = await connection.getBalance(TEST_KEYPAIR.publicKey)
+  const balance = TokenAmount.fromSubunits(balanceLamports, "SOL")
 
-  if (startingBalanceLamports > 0) {
+  if (balance.gt(0)) {
+    // We're ok, continue
     return
   }
 

@@ -70,11 +70,11 @@ export type Deposit = (
   publicKey: PublicKeyLike,
   connection?: Connection,
   opts?: Record<string, unknown>
-) => Promise<Transaction[]>
+) => Promise<Transaction>
 
 export type Withdraw = (
   amount: TokenAmount,
   publicKey: PublicKeyLike,
   connection?: Connection,
   opts?: Record<string, unknown>
-) => Promise<Transaction[]>
+) => Promise<Transaction>

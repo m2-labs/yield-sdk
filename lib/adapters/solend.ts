@@ -155,11 +155,20 @@ export const deposit: Deposit = async (
 
   const transactions = await action.getTransactions()
 
-  return [
-    transactions.preLendingTxn,
-    transactions.lendingTxn,
-    transactions.postLendingTxn
-  ].filter(Boolean) as Transaction[]
+  const tx = new Transaction()
+  if (transactions.preLendingTxn) {
+    tx.add(transactions.preLendingTxn)
+  }
+
+  if (transactions.lendingTxn) {
+    tx.add(transactions.lendingTxn)
+  }
+
+  if (transactions.postLendingTxn) {
+    tx.add(transactions.postLendingTxn)
+  }
+
+  return tx
 }
 
 /**
@@ -188,9 +197,18 @@ export const withdraw: Withdraw = async (
 
   const transactions = await action.getTransactions()
 
-  return [
-    transactions.preLendingTxn,
-    transactions.lendingTxn,
-    transactions.postLendingTxn
-  ].filter(Boolean) as Transaction[]
+  const tx = new Transaction()
+  if (transactions.preLendingTxn) {
+    tx.add(transactions.preLendingTxn)
+  }
+
+  if (transactions.lendingTxn) {
+    tx.add(transactions.lendingTxn)
+  }
+
+  if (transactions.postLendingTxn) {
+    tx.add(transactions.postLendingTxn)
+  }
+
+  return tx
 }

@@ -50,16 +50,16 @@ test("getDepositedBalance() returns the amount a user has deposited", async () =
 
 test("deposit() builds a deposit transaction", async () => {
   const amount = new TokenAmount(100, "USDC")
-  const transactions = await deposit(amount, PUBLIC_KEY)
+  const tx = await deposit(amount, PUBLIC_KEY)
 
-  expect(transactions).toBeDefined()
-  expect(transactions.length).toBeGreaterThanOrEqual(1)
+  expect(tx).toBeDefined()
+  expect(tx.instructions.length).toBeGreaterThanOrEqual(1)
 })
 
 test("withdraw() builds a withdrawal transaction", async () => {
   const amount = new TokenAmount(100, "USDC")
-  const transactions = await withdraw(amount, PUBLIC_KEY)
+  const tx = await withdraw(amount, PUBLIC_KEY)
 
-  expect(transactions).toBeDefined()
-  expect(transactions.length).toBeGreaterThanOrEqual(1)
+  expect(tx).toBeDefined()
+  expect(tx.instructions.length).toBeGreaterThanOrEqual(1)
 })

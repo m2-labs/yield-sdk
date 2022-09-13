@@ -100,7 +100,7 @@ export const deposit: Deposit = async (
     {}
   )
 
-  return [trx]
+  return trx
 }
 
 /**
@@ -120,5 +120,5 @@ export const withdraw: Withdraw = async (
     {}
   )
 
-  return [trx]
+  return trx
 }
