@@ -1,4 +1,3 @@
-import { fetchHandler } from "../utils/fetch-fns"
 import {
   Deposit,
   GetDepositedBalance,
@@ -6,6 +5,7 @@ import {
   Withdraw
 } from "../types"
 import { defaultConnection } from "../utils/connection"
+import { fetchHandler } from "../utils/fetch-fns"
 import {
   solendFetch,
   getMaximumDeposit as solendGetMaximumDeposit,
