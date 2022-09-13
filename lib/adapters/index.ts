@@ -209,6 +209,9 @@ export const withdraw = async (
   }
 }
 
+/**
+ *
+ */
 export const supportedFeatures = (
   protocol: Protocol | string
 ): ProtocolFeature[] => {
@@ -237,4 +240,24 @@ export const supportedFeatures = (
     default:
       return []
   }
+}
+
+/**
+ *
+ */
+export const supportedProtocols = (): Protocol[] => {
+  return [
+    "01",
+    "apricot",
+    "francium",
+    "jet",
+    "jetv2",
+    "larix",
+    "mango",
+    "port",
+    "solend",
+    "solend-stable",
+    "solend-turbo",
+    "tulip"
+  ]
 }
