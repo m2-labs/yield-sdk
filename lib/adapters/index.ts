@@ -261,3 +261,9 @@ export const supportedProtocols = (): Protocol[] => {
     "tulip"
   ]
 }
+
+export const isSupportedProtocol = (
+  protocol: Protocol | string
+): protocol is Protocol => {
+  return supportedProtocols().includes(protocol as Protocol)
+}
