@@ -8,7 +8,13 @@ import type {
 } from "../types"
 import { PublicKeyLike } from "../utils"
 import { fetch as zeroOne } from "./01"
-import { fetch as apricot } from "./apricot"
+import {
+  fetch as apricot,
+  deposit as apricotDeposit,
+  withdraw as apricotWithdraw,
+  getDepositedBalance as apricotGetDepositedBalance,
+  getMaximumDeposit as apricotGetMaximumDeposit
+} from "./apricot"
 import {
   fetch as francium,
   deposit as franciumDeposit,
@@ -123,6 +129,8 @@ export const getDepositedBalance = async (
   connection?: Connection
 ): Promise<TokenAmount> => {
   switch (protocol) {
+    case "apricot":
+      return apricotGetDepositedBalance(tokenInfo, publicKey, connection)
     case "francium":
       return franciumGetDepositedBalance(tokenInfo, publicKey, connection)
     case "solend":
@@ -142,6 +150,8 @@ export const getMaximumDeposit = async (
   connection?: Connection
 ): Promise<TokenAmount> => {
   switch (protocol) {
+    case "apricot":
+      return apricotGetMaximumDeposit(tokenInfo, connection)
     case "francium":
       return franciumGetMaximumDeposit(tokenInfo, connection)
     case "solend":
@@ -162,6 +172,8 @@ export const deposit = async (
   connection?: Connection
 ): Promise<Transaction[]> => {
   switch (protocol) {
+    case "apricot":
+      return apricotDeposit(amount, publicKey, connection)
     case "francium":
       return franciumDeposit(amount, publicKey, connection)
     case "solend":
@@ -182,6 +194,8 @@ export const withdraw = async (
   connection?: Connection
 ): Promise<Transaction[]> => {
   switch (protocol) {
+    case "apricot":
+      return apricotWithdraw(amount, publicKey, connection)
     case "francium":
       return franciumWithdraw(amount, publicKey, connection)
     case "solend":
@@ -199,6 +213,7 @@ export const supportedFeatures = (
   protocol: Protocol | string
 ): ProtocolFeature[] => {
   switch (protocol) {
+    case "apricot":
     case "francium":
     case "solend":
     case "solend-stable":
@@ -211,7 +226,6 @@ export const supportedFeatures = (
         "getMaximumDeposit"
       ]
 
-    case "apricot":
     case "jet":
     case "larix":
     case "mango":
